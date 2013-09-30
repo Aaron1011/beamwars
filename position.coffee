@@ -1,5 +1,6 @@
 class Position
 
-  constructor: (@coordinate, @direction, @time) ->
+  constructor: (pos, @direction, @time) ->
+    @pos = new fabric.Point(pos)
 
 window.Position = Position
