@@ -16,6 +16,7 @@ npm-debug.log
 # CoffeeScript
 *.js
 !lib/**/*.js
+*.map
 
 # Vim
 *.swp
