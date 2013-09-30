@@ -1,6 +1,6 @@
 class Position
 
   constructor: (pos, @direction, @time) ->
-    @pos = new fabric.Point(pos)
+    @pos = new paper.Point(pos)
 
 window.Position = Position
