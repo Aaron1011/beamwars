@@ -14,7 +14,8 @@ describe "Game", ->
 
 
   it "moves players foward after timer tick", ->
-    game = new Game()
-    SynchronizedTime.setTime(0)
+    SynchronizedTime.setTimeForTesting(0)
     game.start()
-    SynchronizedTime.setTime(0.1)
+    SynchronizedTime.setTimeForTesting(0.1)
+    game.timer_tick()
+
