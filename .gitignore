@@ -16,3 +16,6 @@ npm-debug.log
 # CoffeeScript
 *.js
 !lib/**/*.js
+
+# Vim
+*.swp
