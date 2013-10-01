@@ -8,6 +8,8 @@ class Game
   @WIDTH:  200
   @HEIGHT:  300
 
+  @VELOCITY = 0.1
+
   @listeners = []
   @players = []
 
