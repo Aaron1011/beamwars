@@ -10,7 +10,7 @@ requirejs.config({
     #}
 })
 
-require(['position', 'game', 'synchronizedtime'], (Position, Game, SynchronizedTime) ->
+require(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, SynchronizedTime, Point) ->
   describe "Game", ->
     game = null
 
@@ -29,12 +29,11 @@ require(['position', 'game', 'synchronizedtime'], (Position, Game, SynchronizedT
     it "moves players foward after timer tick", ->
       SynchronizedTime.setTimeForTesting(0)
       game.start()
-      a = game.getCurrentLines()
-      console.log(a)
+      expect(game.getCurrentLines()).toEqual([ [], [], [], [] ])
       SynchronizedTime.setTimeForTesting(0.1)
-      console.log "Updated time!"
       game.timer_tick()
-      b = game.getCurrentLines()
-      console.log(b)
-      expect(a).toEqual(b)
+      expect(game.getCurrentLines()).toEqual([[new Point(Game.WIDTH/2 + Game.VELOCITY*.1, 0)],
+                                             [new Point(Game.WIDTH, Game.HEIGHT/2 - Game.VELOCITY*.1)],
+                                             [new Point(Game.WIDTH/2 - Game.VELOCITY*.1, Game.HEIGHT)],
+                                             [new Point(0, Game.HEIGHT/2 + Game.VELOCITY*.1)]])
 )
