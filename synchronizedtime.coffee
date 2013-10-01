@@ -1,10 +1,12 @@
-class SynchronizedTime
+define([], ->
+  class SynchronizedTime
 
-  @time = 0.0
+    @time = 0.0
 
-  @setTimeForTesting: (t) ->
-    SynchronizedTime.time = t
+    @setTimeForTesting: (t) ->
+      SynchronizedTime.time = t
 
-  @getTime: -> SynchronizedTime.time
+    @getTime: -> SynchronizedTime.time
 
-window.SynchronizedTime = SynchronizedTime
+  SynchronizedTime
+)
