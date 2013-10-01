@@ -32,6 +32,24 @@ class Game
   getCurrentLines: ->
     p.current_line for p in @players
 
+  timer_tick: ->
+    console.log "Tick!"
+    new_time = SynchronizedTime.getTime()
+    elapsed_time = new_time - @old_time
+
+    for player in @players
+      lastpos = player.lastPos()
+      if lastpos.direction == Game.NORTH
+        player.addToLine(new paper.Point(lastpos.x - (Game.VELOCITY * elapsed_time), lastpos.y))
+      else if lastpos.direction == Game.SOUTH
+        player.addToLine(new paper.Point(lastpos.x + (Game.VELOCITY * elapsed_time), lastpos.y))
+      else if lastpos.direction == Game.EAST
+        player.addToLine(new paper.Point(lastpos.x, lastpos.y + (Game.VELOCITY * elapsed_time)))
+      else if lastpos.direction == Game.WEST
+        player.addToLine(new paper.Point(lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)))
+
+    @old_time = new_time
+
   add_listener: (listener) ->
     @listeners.append(listener)
 
