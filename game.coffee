@@ -21,7 +21,7 @@ class Game
 
     @players = [@player0, @player1, @player2, @player3]
 
-    @currtime = SynchronizedTime.getTime()
+    @old_time = SynchronizedTime.getTime()
 
 
   key_down: (player, key, coord) ->
