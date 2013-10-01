@@ -1,7 +1,10 @@
-class Position
+define([], ->
 
-  constructor: (@pos, @direction, @time) ->
-    @x = pos[0]
-    @y = pos[1]
+  class Position
 
-window.Position = Position
+    constructor: (@pos, @direction, @time) ->
+      @x = pos[0]
+      @y = pos[1]
+
+  Position
+)
