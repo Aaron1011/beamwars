@@ -29,7 +29,8 @@ class Game
   getPositions: ->
     p.lastPos() for p in @players
 
-  timer_tick: ->
+  getCurrentLines: ->
+    p.current_line for p in @players
 
   add_listener: (listener) ->
     @listeners.append(listener)
