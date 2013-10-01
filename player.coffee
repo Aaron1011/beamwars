@@ -10,6 +10,9 @@ define([], ->
     lastPos: ->
       @positions[@positions.length - 1]
 
+    currentLine: ->
+      @current_line.slice() # Copy array
+
     addToLine: (pos) ->
       @current_line.push(pos)
 
