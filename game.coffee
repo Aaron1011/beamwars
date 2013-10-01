@@ -1,56 +1,59 @@
-class Game
+define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, SynchronizedTime, Point) ->
 
-  @NORTH = 0
-  @SOUTH = 1
-  @EAST = 2
-  @WEST = 3
+  class Game
 
-  @WIDTH:  200
-  @HEIGHT:  300
+    @NORTH = 0
+    @SOUTH = 1
+    @EAST = 2
+    @WEST = 3
 
-  @VELOCITY = 0.1
+    @WIDTH:  200
+    @HEIGHT:  300
 
-  @listeners = []
-  @players = []
+    @VELOCITY = 0.1
 
-  start: ->
-    @player0 = new Player(new Position([Game.WIDTH/2, 0], Game.SOUTH, 0))
-    @player1 = new Player(new Position([Game.WIDTH, Game.HEIGHT/2], Game.WEST, 0))
-    @player2 = new Player(new Position([Game.WIDTH/2, Game.HEIGHT], Game.NORTH, 0))
-    @player3 = new Player(new Position([0, Game.HEIGHT/2], Game.EAST, 0))
+    @listeners = []
+    @players = []
 
-    @players = [@player0, @player1, @player2, @player3]
+    start: ->
+      @player0 = new Player(new Position([Game.WIDTH/2, 0], Game.SOUTH, 0))
+      @player1 = new Player(new Position([Game.WIDTH, Game.HEIGHT/2], Game.WEST, 0))
+      @player2 = new Player(new Position([Game.WIDTH/2, Game.HEIGHT], Game.NORTH, 0))
+      @player3 = new Player(new Position([0, Game.HEIGHT/2], Game.EAST, 0))
 
-    @old_time = SynchronizedTime.getTime()
+      @players = [@player0, @player1, @player2, @player3]
+
+      @old_time = SynchronizedTime.getTime()
 
 
-  key_down: (player, key, coord) ->
+    key_down: (player, key, coord) ->
 
-  getPositions: ->
-    p.lastPos() for p in @players
+    getPositions: ->
+      p.lastPos() for p in @players
 
-  getCurrentLines: ->
-    p.current_line for p in @players
+    getCurrentLines: ->
+      p.current_line for p in @players
 
-  timer_tick: ->
-    console.log "Tick!"
-    new_time = SynchronizedTime.getTime()
-    elapsed_time = new_time - @old_time
+    timer_tick: ->
+      console.log "Tick!"
+      new_time = SynchronizedTime.getTime()
+      elapsed_time = new_time - @old_time
 
-    for player in @players
-      lastpos = player.lastPos()
-      if lastpos.direction == Game.NORTH
-        player.addToLine(new paper.Point(lastpos.x - (Game.VELOCITY * elapsed_time), lastpos.y))
-      else if lastpos.direction == Game.SOUTH
-        player.addToLine(new paper.Point(lastpos.x + (Game.VELOCITY * elapsed_time), lastpos.y))
-      else if lastpos.direction == Game.EAST
-        player.addToLine(new paper.Point(lastpos.x, lastpos.y + (Game.VELOCITY * elapsed_time)))
-      else if lastpos.direction == Game.WEST
-        player.addToLine(new paper.Point(lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)))
+      for player in @players
+        lastpos = player.lastPos()
+        if lastpos.direction == Game.NORTH
+          player.addToLine(new Point(lastpos.x - (Game.VELOCITY * elapsed_time), lastpos.y))
+        else if lastpos.direction == Game.SOUTH
+          player.addToLine(new Point(lastpos.x + (Game.VELOCITY * elapsed_time), lastpos.y))
+        else if lastpos.direction == Game.EAST
+          player.addToLine(new Point(lastpos.x, lastpos.y + (Game.VELOCITY * elapsed_time)))
+        else if lastpos.direction == Game.WEST
+          player.addToLine(new Point(lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)))
 
-    @old_time = new_time
+      @old_time = new_time
 
-  add_listener: (listener) ->
-    @listeners.append(listener)
+    add_listener: (listener) ->
+      @listeners.append(listener)
 
-window.Game = Game
+  Game
+)
