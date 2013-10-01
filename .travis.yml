@@ -1,0 +1,5 @@
+language: node_js
+before_script: npm install jasmine-node
+script:
+  - coffee -c . -o .
+  - jasmine-node --captureExceptions --runWithRequireJs --coffee --verbose spec
