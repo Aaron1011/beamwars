@@ -35,7 +35,6 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
       p.currentLine() for p in @players
 
     timer_tick: ->
-      console.log "Tick!"
       new_time = SynchronizedTime.getTime()
       elapsed_time = new_time - @old_time
 
