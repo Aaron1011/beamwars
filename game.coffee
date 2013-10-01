@@ -32,7 +32,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
       p.lastPos() for p in @players
 
     getCurrentLines: ->
-      p.current_line for p in @players
+      p.currentLine() for p in @players
 
     timer_tick: ->
       console.log "Tick!"
