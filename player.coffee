@@ -1,14 +1,17 @@
-class Player
+define([], ->
 
-  constructor: (pos) ->
-    @positions = []
-    @positions.push(pos)
-    @current_line = []
+  class Player
 
-  lastPos: ->
-    @positions[@positions.length - 1]
+    constructor: (pos) ->
+      @positions = []
+      @positions.push(pos)
+      @current_line = []
 
-  addToLine: (pos) ->
-    @current_line.push(pos)
+    lastPos: ->
+      @positions[@positions.length - 1]
 
-window.Player = Player
+    addToLine: (pos) ->
+      @current_line.push(pos)
+
+  Player
+)
