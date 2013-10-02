@@ -57,15 +57,15 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
       elapsed_time = new_time - @old_time
 
       for player in @players
-        lastpos = player.currentLinePos() or player.lastPos()
-        if lastpos.direction == Game.NORTH
-          player.addToLine(new Position([lastpos.x - (Game.VELOCITY * elapsed_time), lastpos.y], Game.NORTH, new_time))
-        else if lastpos.direction == Game.SOUTH
-          player.addToLine(new Position([lastpos.x + (Game.VELOCITY * elapsed_time), lastpos.y], Game.SOUTH, new_time))
+        lastpos = player.currentLinePos() || player.lastPos()
+        if lastpos.direction == Game.WEST
+          player.addToLine(new Position([lastpos.x - (Game.VELOCITY * elapsed_time), lastpos.y], Game.WEST, new_time))
         else if lastpos.direction == Game.EAST
-          player.addToLine(new Position([lastpos.x, lastpos.y + (Game.VELOCITY * elapsed_time)], Game.EAST, new_time))
-        else if lastpos.direction == Game.WEST
-          player.addToLine(new Position([lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)], Game.WEST, new_time))
+          player.addToLine(new Position([lastpos.x + (Game.VELOCITY * elapsed_time), lastpos.y], Game.EAST, new_time))
+        else if lastpos.direction == Game.SOUTH
+          player.addToLine(new Position([lastpos.x, lastpos.y + (Game.VELOCITY * elapsed_time)], Game.SOUTH, new_time))
+        else if lastpos.direction == Game.NORTH
+          player.addToLine(new Position([lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)], Game.NORTH, new_time))
 
       @old_time = new_time
 
