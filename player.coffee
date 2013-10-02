@@ -29,6 +29,9 @@ define([], ->
     currentLine: ->
       @current_line.slice() # Copy array
 
+    currentLinePos: ->
+      @current_line[@current_line.length - 1]
+
     addToLine: (pos) ->
       @current_line.push(pos)
 
