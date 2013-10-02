@@ -43,6 +43,8 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
 
       @old_time = SynchronizedTime.getTime()
 
+    arrayEqual: (a, b) ->
+      a.length is b.length and a.every (elem, i) -> elem is b[i]
 
     key_down: (player, key, coord) ->
 
