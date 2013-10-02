@@ -18,7 +18,7 @@ define([], ->
 
   class Player
 
-    constructor: (pos) ->
+    constructor: (@name, pos) ->
       @positions = []
       @positions.push(pos)
       @current_line = []
