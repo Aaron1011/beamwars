@@ -69,8 +69,8 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
 
       @old_time = new_time
 
-    add_listener: (listener) ->
-      @listeners.append(listener)
+    addListener: (listener) ->
+      @listeners.push(listener)
 
   Game
 )
