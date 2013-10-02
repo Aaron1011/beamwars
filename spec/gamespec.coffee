@@ -37,4 +37,15 @@ require(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Sync
                                              [new Position([Game.WIDTH - Game.VELOCITY*.1, Game.HEIGHT/2], Game.WEST, .1)],
                                              [new Position([Game.WIDTH/2, Game.HEIGHT - Game.VELOCITY*.1], Game.NORTH, .1)],
                                              [new Position([0 + Game.VELOCITY*.1, Game.HEIGHT/2], Game.EAST, .1)]])
+
+    it "notifies the listeners about a collision", ->
+      listener = jasmine.createSpyObj('listener', ['notify'])
+      SynchronizedTime.setTimeForTesting(0)
+      game.addListener(listener)
+      game.start()
+      game.player0.addToLine(new Position([1, 0], Game.EAST, 0))
+      game.player1.addToLine(new Position([3, 0], Game.WEST, 0))
+      SynchronizedTime.setTimeForTesting(1)
+      game.timer_tick()
+      expect(listener.notify).toHaveBeenCalledWith(game.player1, game.player0, new Point(2,0))
 )
