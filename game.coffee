@@ -28,6 +28,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
 
     @VELOCITY = 0.1
 
+    @use_collisions = true
 
     constructor: ->
       @players = []
@@ -54,6 +55,14 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
     getCurrentLines: ->
       p.currentLine() for p in @players
 
+    handle_collisions: (player) ->
+      pos = player.currentLinePos()
+      for p in @players
+        continue if p.name == player.name
+        for pos2 in p.currentLine()
+          if @arrayEqual(pos2.pos, pos.pos)
+            listener.notify(player, p, new Point(pos.pos...)) for listener in @listeners
+
     timer_tick: ->
       new_time = SynchronizedTime.getTime()
       elapsed_time = new_time - @old_time
@@ -68,6 +77,8 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
           player.addToLine(new Position([lastpos.x, lastpos.y + (Game.VELOCITY * elapsed_time)], Game.SOUTH, new_time))
         else if lastpos.direction == Game.NORTH
           player.addToLine(new Position([lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)], Game.NORTH, new_time))
+
+        @handle_collisions(player) if Game.use_collisions
 
       @old_time = new_time
 
