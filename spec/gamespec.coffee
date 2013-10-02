@@ -16,6 +16,7 @@ require(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Sync
 
     beforeEach(() ->
       game = new Game()
+      Game.VELOCITY = 1
     )
 
     it "starts players in the correct starting posititon", ->
