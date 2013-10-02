@@ -28,8 +28,10 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
 
     @VELOCITY = 0.1
 
-    @listeners = []
-    @players = []
+
+    constructor: ->
+      @players = []
+      @listeners = []
 
     start: ->
       @player0 = new Player(new Position([Game.WIDTH/2, 0], Game.SOUTH, 0))
