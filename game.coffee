@@ -34,10 +34,10 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
       @listeners = []
 
     start: ->
-      @player0 = new Player(new Position([Game.WIDTH/2, 0], Game.SOUTH, 0))
-      @player1 = new Player(new Position([Game.WIDTH, Game.HEIGHT/2], Game.WEST, 0))
-      @player2 = new Player(new Position([Game.WIDTH/2, Game.HEIGHT], Game.NORTH, 0))
-      @player3 = new Player(new Position([0, Game.HEIGHT/2], Game.EAST, 0))
+      @player0 = new Player("Player0", new Position([Game.WIDTH/2, 0], Game.SOUTH, 0))
+      @player1 = new Player("Player1", new Position([Game.WIDTH, Game.HEIGHT/2], Game.WEST, 0))
+      @player2 = new Player("Player2", new Position([Game.WIDTH/2, Game.HEIGHT], Game.NORTH, 0))
+      @player3 = new Player("Player3", new Position([0, Game.HEIGHT/2], Game.EAST, 0))
 
       @players = [@player0, @player1, @player2, @player3]
 
