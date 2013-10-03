@@ -38,7 +38,7 @@ require(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Sync
                                              [new Position([Game.WIDTH/2, Game.HEIGHT - Game.VELOCITY*.1], Game.NORTH, .1)],
                                              [new Position([0 + Game.VELOCITY*.1, Game.HEIGHT/2], Game.EAST, .1)]])
 
-    it "notifies the listeners about a collision", ->
+    it "notifies the listeners about a head-collision for each player", ->
       listener = jasmine.createSpyObj('listener', ['notify'])
       SynchronizedTime.setTimeForTesting(0)
       game.addListener(listener)
