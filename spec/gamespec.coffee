@@ -48,4 +48,5 @@ require(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Sync
       SynchronizedTime.setTimeForTesting(1)
       game.timer_tick()
       expect(listener.notify).toHaveBeenCalledWith(game.player1, game.player0, new Point(2,0))
+      expect(listener.notify).toHaveBeenCalledWith(game.player0, game.player1, new Point(2,0))
 )
