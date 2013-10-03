@@ -78,7 +78,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
         else if lastpos.direction == Game.NORTH
           player.addToLine(new Position([lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)], Game.NORTH, new_time))
 
-        @handle_collisions(player) if Game.use_collisions
+      @handle_collisions(player) for player in @players if Game.use_collisions
 
       @old_time = new_time
 
