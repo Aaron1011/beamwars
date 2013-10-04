@@ -14,13 +14,14 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define([], ->
+define(['lib/fabric'], ->
 
   class Position
 
-    constructor: (@pos, @direction, @time) ->
+    constructor: (pos, @direction, @time) ->
       @x = pos[0]
       @y = pos[1]
+      @pos = new fabric.Point(pos[0], pos[1])
 
   Position
 )
