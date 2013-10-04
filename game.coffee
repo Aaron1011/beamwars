@@ -60,7 +60,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
       for p in @players
         continue if p.name == player.name
         for pos2 in p.currentLine()
-          if @arrayEqual(pos2.pos, pos.pos)
+          if pos2.pos.eq(pos.pos)
             listener.notify(player, p, new Point(pos.pos...)) for listener in @listeners
 
     timer_tick: ->
