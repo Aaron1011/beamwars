@@ -26,7 +26,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
     @WIDTH:  200
     @HEIGHT:  300
 
-    @VELOCITY = 0.1
+    @VELOCITY = 1
 
     @use_collisions = true
 
