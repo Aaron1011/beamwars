@@ -15,9 +15,9 @@ define ['game', 'synchronizedtime', 'position', 'lib/fabric'], (Game, Synchroniz
   game.browser = true
   game.start()
   setInterval((->
-    SynchronizedTime.time += 1
+    SynchronizedTime.time += 1/60
     game.timer_tick()
     ),
-    1000
+    (1/60) * 1000
   )
 
