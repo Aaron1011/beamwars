@@ -14,26 +14,30 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define([], ->
+define(['fabric'], ->
 
   class Player
 
     constructor: (@name, pos) ->
       @positions = []
       @positions.push(pos)
-      @current_line = []
+      @current_line = new fabric.Polyline([], {
+        stroke: 'black',
+        stokeWidth: 3,
+        fille: 'white'
+      })
 
     lastPos: ->
       @positions[@positions.length - 1]
 
     currentLine: ->
-      @current_line.slice() # Copy array
+      @current_line.points.slice() # Copy array
 
     currentLinePos: ->
-      @current_line[@current_line.length - 1]
+      @current_line.points[@current_line.points.length - 1]
 
     addToLine: (pos) ->
-      @current_line.push(pos)
+      @current_line.points.push(pos)
 
   Player
 )
