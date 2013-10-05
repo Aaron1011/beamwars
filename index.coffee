@@ -12,6 +12,7 @@ define ['game', 'synchronizedtime', 'position', 'lib/fabric'], (Game, Synchroniz
   window.canvas = canvas
 
   game = new Game(canvas)
+  game.browser = true
   game.start()
   setInterval((->
     SynchronizedTime.time += 1
