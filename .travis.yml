@@ -1,5 +1,5 @@
 language: node_js
-before_script: npm install -g jasmine-node coffee-script
+install: npm install -g
 script:
   - coffee -o . -c .
   - jasmine-node --captureExceptions --runWithRequireJs --coffee --verbose spec
