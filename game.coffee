@@ -30,9 +30,11 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
 
     @use_collisions = true
 
-    constructor: ->
+    constructor: (canvas) ->
       @players = []
       @listeners = []
+      @browser = false
+
 
     start: ->
       @player0 = new Player("Player0", new Position([Game.WIDTH/2, 0], Game.SOUTH, 0))
@@ -72,6 +74,9 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
         else if lastpos.direction == Game.NORTH
           player.addToLine(new Position([lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)], Game.NORTH, new_time))
 
+    render_game: ->
+      return
+
 
     timer_tick: ->
       new_time = SynchronizedTime.getTime()
@@ -81,6 +86,8 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
 
       if Game.use_collisions
         @handle_collisions(player) for player in @players
+
+      @render_game if @browser
 
       @old_time = new_time
 
