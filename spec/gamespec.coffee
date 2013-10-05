@@ -61,7 +61,6 @@ require(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Sync
         game.player1.addToLine(new Position([0, 1], Game.NORTH, 0))
         SynchronizedTime.setTimeForTesting(1)
         game.timer_tick()
-        console.log(c.args for c in listener.notify.calls)
         expect(listener.notify).toHaveBeenCalledWith(game.player1, game.player0, new Point(0,0))
         expect(listener.notify).not.toHaveBeenCalledWith(game.player0, game.player1, new Point(0,0))
 )
