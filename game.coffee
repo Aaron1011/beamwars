@@ -44,6 +44,10 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
 
       @players = [@player0, @player1, @player2, @player3]
 
+      if @browser
+        @canvas.add(p.current_line) for p in @players
+
+
       @old_time = SynchronizedTime.getTime()
 
     key_down: (player, key, coord) ->
