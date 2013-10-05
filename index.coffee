@@ -9,6 +9,7 @@ define ['game', 'synchronizedtime', 'position', 'lib/fabric'], (Game, Synchroniz
   console.log "Fabric: ", fabric
   console.log "Position: ", new Position([1,2], 0, 5)
   canvas = new fabric.Canvas('canvas')
+  window.canvas = canvas
 
   rect = new fabric.Rect({
     left: 100,
