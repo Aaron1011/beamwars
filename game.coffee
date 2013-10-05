@@ -30,7 +30,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
 
     @use_collisions = true
 
-    constructor: (canvas) ->
+    constructor: (@canvas) ->
       @players = []
       @listeners = []
       @browser = false
