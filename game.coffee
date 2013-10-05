@@ -58,7 +58,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
         continue if p.name == player.name
         for pos2 in p.currentLine()
           if pos2.pos.eq(pos.pos)
-            listener.notify(player, p, new Point(pos.pos...)) for listener in @listeners
+            listener.notify(player, p, new Point(pos.pos.x, pos.pos.y)) for listener in @listeners
 
     move_players: (elapsed_time, new_time) ->
       for player in @players
