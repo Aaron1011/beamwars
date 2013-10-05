@@ -11,7 +11,7 @@ define ['game', 'synchronizedtime', 'position', 'lib/fabric'], (Game, Synchroniz
   canvas = new fabric.Canvas('canvas', {renderOnAddRemove: false})
   window.canvas = canvas
 
-  game = new Game()
+  game = new Game(canvas)
   game.start()
   setInterval((->
     SynchronizedTime.time += 1
