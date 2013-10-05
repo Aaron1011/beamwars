@@ -60,7 +60,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
           if pos2.pos.eq(pos.pos)
             listener.notify(player, p, new Point(pos.pos...)) for listener in @listeners
 
-    move_players: ->
+    move_players: (elapsed_time, new_time) ->
       for player in @players
         lastpos = player.currentLinePos() || player.lastPos()
         if lastpos.direction == Game.WEST
@@ -77,7 +77,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
       new_time = SynchronizedTime.getTime()
       elapsed_time = new_time - @old_time
 
-      @move_players(elapsed_time)
+      @move_players(elapsed_time, new_time)
 
       if Game.use_collisions
         @handle_collisions(player) for player in @players
