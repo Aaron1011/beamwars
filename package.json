@@ -1,0 +1,10 @@
+{
+    "name": "BeamWars",
+    "version": "1.0.0",
+    "dependencies": {
+      "jasmine-node": ">=0",
+      "fabric": ">=0",
+      "coffee-script": ">=0"
+    }
+}
+
