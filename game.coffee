@@ -79,7 +79,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
           player.addToLine(new Position([lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)], Game.NORTH, new_time))
 
     render_game: ->
-      return
+      @canvas.renderAll()
 
 
     timer_tick: ->
