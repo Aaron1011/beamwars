@@ -23,8 +23,8 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
     @EAST = 2
     @WEST = 3
 
-    @WIDTH:  200
-    @HEIGHT:  300
+    @WIDTH:  window.canvas.width
+    @HEIGHT:  window.canvas.height
 
     @VELOCITY = 100
 
