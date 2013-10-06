@@ -85,6 +85,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
 
 
     render_game: ->
+      p.setupLine() for p in @players
       @canvas.renderAll()
 
     storeKeyPress: (keyCode) ->
