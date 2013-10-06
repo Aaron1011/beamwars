@@ -26,8 +26,8 @@ define(['fabric'], (fabric) ->
         stroke: 'blue',
         strokeWidth: 5,
         fille: 'white'
-        left: 200
-        top: 200
+        left: 0
+        top: 0
       })
 
     lastPos: ->
