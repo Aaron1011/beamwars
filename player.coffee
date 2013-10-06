@@ -23,7 +23,7 @@ define(['fabric'], (fabric) ->
       @positions = []
       @positions.push(pos)
       @current_line = new fabric.Polyline([], {
-        stroke: 'black',
+        stroke: 'blue',
         stokeWidth: 3,
         fille: 'white'
         left: 200
