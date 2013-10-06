@@ -87,7 +87,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
       @key = keyCode
 
     handle_input: (time) ->
-      lastpos = @player0.lastPos()
+      lastpos = @player0.currentLinePos()
       player = @player0
       switch @key
         when 37
