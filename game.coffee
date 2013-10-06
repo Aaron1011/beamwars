@@ -83,6 +83,8 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
     render_game: ->
       @canvas.renderAll()
 
+    storeKeyPress: (keyCode) ->
+      @key = keyCode
 
     timer_tick: ->
       new_time = SynchronizedTime.getTime()
