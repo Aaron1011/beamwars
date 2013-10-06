@@ -47,6 +47,8 @@ define(['fabric'], (fabric) ->
       @current_line.points[@current_line.points.length - 1]
 
     addToLine: (pos) ->
+      @canvas.add(@current_line) unless @inCanvas
+      @inCanvas = true
       @current_line.points.push(pos)
 
   Player
