@@ -22,6 +22,7 @@ define(['fabric', 'game'], (fabric, Game) ->
     constructor: (@name, pos, @canvas, @game) ->
       @positions = []
       @positions.push(pos)
+      @unverified_positions = []
       @current_line = new fabric.Polyline([], {
         stroke: 'blue',
         strokeWidth: 5,
