@@ -55,6 +55,9 @@ define(['fabric', 'game'], (fabric, Game) ->
     addToLine: (pos) ->
       @unverified_positions.push(pos)
 
+    setupLine: ->
+      @current_line.points = @completeLine()
+
     completeLine: ->
       @positions.concat(@unverified_positions)
 
