@@ -92,16 +92,16 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
       switch @key
         when 37
           player.positions.push(new Position([lastpos.x, lastpos.y], Game.WEST, time))
-          player.clearLine()
+          player.resetLine()
         when 38
           player.positions.push(new Position([lastpos.x, lastpos.y], Game.NORTH, time))
-          player.clearLine()
+          player.resetLine()
         when 39
           player.positions.push(new Position([lastpos.x, lastpos.y], Game.EAST, time))
-          player.clearLine()
+          player.resetLine()
         when 40
           player.positions.push(new Position([lastpos.x, lastpos.y], Game.SOUTH, time))
-          player.clearLine()
+          player.resetLine()
 
       @key = null
 

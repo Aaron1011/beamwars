@@ -34,7 +34,7 @@ define(['fabric'], (fabric) ->
     lastPos: ->
       @positions[@positions.length - 1]
 
-    clearLine: ->
+    resetLine: ->
       @current_line.points = []
       @canvas.remove(@current_line)
       @inCanvas = false
