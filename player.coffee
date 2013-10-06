@@ -43,6 +43,7 @@ define(['fabric'], (fabric) ->
       @current_line.points.slice() # Copy array
 
     currentLinePos: ->
+      return [] unless @current_line.points.length > 0
       @current_line.points[@current_line.points.length - 1]
 
     addToLine: (pos) ->
