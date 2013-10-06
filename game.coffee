@@ -114,6 +114,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
       if Game.use_collisions
         @handle_collisions(player) for player in @players
 
+      @handle_input(elapsed_time)
       @render_game() if @browser
 
       @old_time = new_time
