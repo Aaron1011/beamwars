@@ -29,6 +29,7 @@ define(['fabric'], (fabric) ->
         left: 0
         top: 0
       })
+      @inCanvas = true
 
     lastPos: ->
       @positions[@positions.length - 1]
