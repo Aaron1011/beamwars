@@ -18,6 +18,8 @@ define ['game', 'synchronizedtime', 'position', 'lib/fabric', 'lib/jquery'], (Ga
 
   game = new Game(canvas)
   game.browser = true
+  $(document).keydown (e) -> game.storeKeyPress(e.which)
+
   game.start()
   setInterval((->
     SynchronizedTime.time += 1/60
