@@ -22,9 +22,9 @@ define ['game', 'synchronizedtime', 'position', 'lib/fabric', 'lib/jquery'], (Ga
 
   game.start()
   setInterval((->
-    SynchronizedTime.time += 1
+    SynchronizedTime.time += 1/10
     game.timer_tick()
     ),
-    1000
+    100
   )
 
