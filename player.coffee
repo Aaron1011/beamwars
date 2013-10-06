@@ -30,7 +30,6 @@ define(['fabric', 'game'], (fabric, Game) ->
         left: 0
         top: 0
       })
-      @inCanvas = true
 
     lastPos: ->
       @positions[@positions.length - 1]
@@ -38,7 +37,6 @@ define(['fabric', 'game'], (fabric, Game) ->
     resetLine: ->
       @current_line.points = []
       @canvas.remove(@current_line)
-      @inCanvas = false
 
     currentLine: ->
       @current_line.points.slice() # Copy array
@@ -48,8 +46,6 @@ define(['fabric', 'game'], (fabric, Game) ->
       @current_line.points[@current_line.points.length - 1]
 
     addToLine: (pos) ->
-      @canvas.add(@current_line) unless @inCanvas
-      @inCanvas = true
       @current_line.points.push(pos)
 
   Player
