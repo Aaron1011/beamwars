@@ -43,6 +43,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
       @player3 = new Player("Player3", new Position([0, Game.HEIGHT/2], Game.EAST, 0), @canvas)
 
       @players = [@player0, @player1, @player2, @player3]
+      @player0.current_line.stroke = 'green'
 
       if @browser
         @canvas.add(p.current_line) for p in @players
