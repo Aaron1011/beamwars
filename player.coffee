@@ -26,7 +26,7 @@ define(['fabric', 'game'], (fabric, Game) ->
       @current_line = new fabric.Polyline([], {
         stroke: 'blue',
         strokeWidth: 5,
-        fille: 'white'
+        fill: 'white'
         left: 0
         top: 0
       })
