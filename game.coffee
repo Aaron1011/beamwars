@@ -37,10 +37,10 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
 
 
     start: ->
-      @player0 = new Player("Player0", new Position([Game.WIDTH/2, 0], Game.SOUTH, 0), @canvas)
-      @player1 = new Player("Player1", new Position([Game.WIDTH, Game.HEIGHT/2], Game.WEST, 0), @canvas)
-      @player2 = new Player("Player2", new Position([Game.WIDTH/2, Game.HEIGHT], Game.NORTH, 0), @canvas)
-      @player3 = new Player("Player3", new Position([0, Game.HEIGHT/2], Game.EAST, 0), @canvas)
+      @player0 = new Player("Player0", new Position([Game.WIDTH/2, 0], Game.SOUTH, 0), @canvas, this)
+      @player1 = new Player("Player1", new Position([Game.WIDTH, Game.HEIGHT/2], Game.WEST, 0), @canvas, this)
+      @player2 = new Player("Player2", new Position([Game.WIDTH/2, Game.HEIGHT], Game.NORTH, 0), @canvas, this)
+      @player3 = new Player("Player3", new Position([0, Game.HEIGHT/2], Game.EAST, 0), @canvas, this)
 
       @players = [@player0, @player1, @player2, @player3]
       @player0.current_line.stroke = 'green'
