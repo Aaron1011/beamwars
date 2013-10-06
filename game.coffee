@@ -86,6 +86,25 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
     storeKeyPress: (keyCode) ->
       @key = keyCode
 
+    handle_input: (time) ->
+      lastpos = @player0.lastPos()
+      player = @player0
+      switch @key
+        when 37
+          player.positions.push(new Position([lastpos.x, lastpos.y], Game.WEST, time))
+          player.clearLine()
+        when 38
+          player.positions.push(new Position([lastpos.x, lastpos.y], Game.NORTH, time))
+          player.clearLine()
+        when 39
+          player.positions.push(new Position([lastpos.x, lastpos.y], Game.EAST, time))
+          player.clearLine()
+        when 40
+          player.positions.push(new Position([lastpos.x, lastpos.y], Game.SOUTH, time))
+          player.clearLine()
+
+      @key = null
+
     timer_tick: ->
       new_time = SynchronizedTime.getTime()
       elapsed_time = new_time - @old_time
