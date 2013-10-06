@@ -46,14 +46,14 @@ define(['fabric', 'game'], (fabric, Game) ->
           @unverified_positions.splice(@unverified_positions.indexOf(pos), 1)
 
     currentLine: ->
-      @current_line.points.slice() # Copy array
+      @unverified_positions.slice() # Copy array
 
     currentLinePos: ->
-      return [] unless @current_line.points.length > 0
-      @current_line.points[@current_line.points.length - 1]
+      return [] unless @unverified_positions.length > 0
+      @unverified_positions[@unverified_positions.length - 1]
 
     addToLine: (pos) ->
-      @current_line.points.push(pos)
+      @unverified_positions.push(pos)
 
   Player
 )
