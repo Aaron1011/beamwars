@@ -5,7 +5,7 @@ requirejs.config({
   }
 })
 
-define ['game', 'synchronizedtime', 'position', 'lib/fabric'], (Game, SynchronizedTime, Position) -> # Fabric is deliberately not set as an argument
+define ['game', 'synchronizedtime', 'position', 'lib/fabric', 'lib/jquery'], (Game, SynchronizedTime, Position) -> # Fabric is deliberately not set as an argument
   console.log "Fabric: ", fabric
   console.log "Position: ", new Position([1,2], 0, 5)
   canvas = new fabric.Canvas('canvas', {renderOnAddRemove: false})
