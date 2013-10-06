@@ -68,17 +68,21 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
             listener.notify(player, p, new Point(pos.pos.x, pos.pos.y)) for listener in @listeners
 
     move_players: (elapsed_time, new_time) ->
-      for player in @players
-        lastpos = player.currentLinePos()
-        lastpos = player.lastPos() if !lastpos or lastpos.length == 0
-        if lastpos.direction == Game.WEST
-          player.addToLine(new Position([lastpos.x - (Game.VELOCITY * elapsed_time), lastpos.y], Game.WEST, new_time))
-        else if lastpos.direction == Game.EAST
-          player.addToLine(new Position([lastpos.x + (Game.VELOCITY * elapsed_time), lastpos.y], Game.EAST, new_time))
-        else if lastpos.direction == Game.SOUTH
-          player.addToLine(new Position([lastpos.x, lastpos.y + (Game.VELOCITY * elapsed_time)], Game.SOUTH, new_time))
-        else if lastpos.direction == Game.NORTH
-          player.addToLine(new Position([lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)], Game.NORTH, new_time))
+      @move_player(player, elapsed_time, new_time) for player in @players
+
+    move_player: (player, elapsed_time, new_time, lastpos2) ->
+      lastpos = player.currentLinePos()
+      lastpos = player.lastPos() if !lastpos or lastpos.length == 0
+      lastpos = lastpos2 if lastpos2?
+      if lastpos.direction == Game.WEST
+        player.addToLine(new Position([lastpos.x - (Game.VELOCITY * elapsed_time), lastpos.y], Game.WEST, new_time))
+      else if lastpos.direction == Game.EAST
+        player.addToLine(new Position([lastpos.x + (Game.VELOCITY * elapsed_time), lastpos.y], Game.EAST, new_time))
+      else if lastpos.direction == Game.SOUTH
+        player.addToLine(new Position([lastpos.x, lastpos.y + (Game.VELOCITY * elapsed_time)], Game.SOUTH, new_time))
+      else if lastpos.direction == Game.NORTH
+        player.addToLine(new Position([lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)], Game.NORTH, new_time))
+
 
     render_game: ->
       @canvas.renderAll()
