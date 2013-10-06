@@ -19,7 +19,7 @@ define(['fabric'], (fabric) ->
 
   class Player
 
-    constructor: (@name, pos) ->
+    constructor: (@name, pos, @canvas) ->
       @positions = []
       @positions.push(pos)
       @current_line = new fabric.Polyline([], {
