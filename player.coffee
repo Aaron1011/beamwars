@@ -14,12 +14,12 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define(['fabric'], (fabric) ->
+define(['fabric', 'game'], (fabric, Game) ->
   fabric = fabric.fabric if fabric.fabric?
 
   class Player
 
-    constructor: (@name, pos, @canvas) ->
+    constructor: (@name, pos, @canvas, @game) ->
       @positions = []
       @positions.push(pos)
       @current_line = new fabric.Polyline([], {
