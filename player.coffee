@@ -34,6 +34,11 @@ define(['fabric'], (fabric) ->
     lastPos: ->
       @positions[@positions.length - 1]
 
+    clearLine: ->
+      @current_line.points = []
+      @canvas.remove(@current_line)
+      @inCanvas = false
+
     currentLine: ->
       @current_line.points.slice() # Copy array
 
