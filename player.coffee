@@ -35,8 +35,15 @@ define(['fabric', 'game'], (fabric, Game) ->
       @positions[@positions.length - 1]
 
     resetLine: ->
-      @current_line.points = []
-      @canvas.remove(@current_line)
+      new_line = @currentLine()
+      lastpos = @lastPos()
+      old_time = lastpos.time
+      for pos in new_line
+        if pos.time > lastpos.time
+          @game.move_player(this, pos.time - old_time, pos.time, lastpos)
+          old_time = pos.time
+        else
+          @unverified_positions.splice(@unverified_positions.indexOf(pos), 1)
 
     currentLine: ->
       @current_line.points.slice() # Copy array
