@@ -32,6 +32,7 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
 
     constructor: (@canvas) ->
       @players = []
+      @killedPlayers = []
       @listeners = []
       @browser = false
       @after_fns = []
@@ -57,6 +58,12 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
 
     getPositions: ->
       p.lastPos() for p in @players
+
+    killPlayer: (player, point) ->
+      console.log "Index: ", @players.indexOf(player)
+      if @players.indexOf(player) != -1
+        @killedPlayers.push(@players.splice(@players.indexOf(player), 1))
+
 
     getCurrentLines: ->
       p.currentLine() for p in @players
