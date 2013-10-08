@@ -34,6 +34,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
       @players = []
       @listeners = []
       @browser = false
+      @after_fns = []
 
 
     start: ->
@@ -114,6 +115,9 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
       new_time = SynchronizedTime.getTime()
       elapsed_time = new_time - @old_time
 
+      fn(this) for fn in @after_fns
+      @after_fns = []
+
       @move_players(elapsed_time, new_time)
 
       if Game.use_collisions
@@ -126,6 +130,9 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
 
     addListener: (listener) ->
       @listeners.push(listener)
+
+    runAfterTick: (fn) ->
+      @after_fns.push(fn)
 
   Game
 )
