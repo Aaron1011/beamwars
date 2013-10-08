@@ -70,7 +70,7 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
 
     handle_collisions: (player) ->
       pos = player.currentLinePos()
-      for p in @players
+      for p in @players.slice()
         continue if p.name == player.name
         for pos2 in p.currentLine()
           if pos2.pos.eq(pos.pos)
@@ -129,7 +129,7 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
       @move_players(elapsed_time, new_time)
 
       if Game.use_collisions
-        @handle_collisions(player) for player in @players
+        @handle_collisions(player) for player in @players.slice()
 
       @handle_input(new_time)
       @render_game() if @browser
