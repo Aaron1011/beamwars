@@ -72,7 +72,7 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
       pos = player.currentLinePos()
       for p in @players.slice()
         continue if p.name == player.name
-        for pos2 in p.currentLine()
+        for pos2 in p.completeLine()
           if pos2.pos.eq(pos.pos)
             listener.notify(player, p, new Point(pos.pos.x, pos.pos.y)) for listener in @listeners
 
