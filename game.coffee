@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, SynchronizedTime, Point) ->
+define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener'], (Position, Player, SynchronizedTime, Point, SinglePlayerListener) ->
 
   class Game
 
@@ -48,6 +48,7 @@ define(['position', 'player', 'synchronizedtime', 'point'], (Position, Player, S
 
       if @browser
         @canvas.add(p.current_line) for p in @players
+        @listeners.push(new SinglePlayerListener(this))
 
 
       @old_time = SynchronizedTime.getTime()
