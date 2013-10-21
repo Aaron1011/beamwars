@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener'], (Position, Player, SynchronizedTime, Point, SinglePlayerListener) ->
+define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener', 'walls'], (Position, Player, SynchronizedTime, Point, SinglePlayerListener, walls) ->
 
   class Game
 
@@ -36,6 +36,7 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
       @listeners = []
       @browser = false
       @after_fns = []
+      @walls = new walls.Walls(this)
 
 
     start: ->
@@ -60,7 +61,6 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
       p.lastPos() for p in @players
 
     killPlayer: (player, point) ->
-      console.log "Index: ", @players.indexOf(player)
       if @players.indexOf(player) != -1
         @killedPlayers.push(@players.splice(@players.indexOf(player), 1))
 
@@ -68,16 +68,11 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
     getCurrentLines: ->
       p.currentLine() for p in @players
 
-    handle_collisions: (player) ->
-      pos = player.currentLinePos()
-      for p in @players.slice()
-        continue if p.name == player.name
-        for pos2 in p.completeLine()
-          if pos2.pos.eq(pos.pos)
-            listener.notify(player, p, new Point(pos.pos.x, pos.pos.y)) for listener in @listeners
-
     move_players: (elapsed_time, new_time) ->
-      @move_player(player, elapsed_time, new_time) for player in @players
+      segments = []
+      for player in @players
+        segments.push(@move_player(player, elapsed_time, new_time))
+      segments
 
     move_player: (player, elapsed_time, new_time, lastpos2) ->
       lastpos = player.currentLinePos()
@@ -91,6 +86,8 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
         player.addToLine(new Position([lastpos.x, lastpos.y + (Game.VELOCITY * elapsed_time)], Game.SOUTH, new_time))
       else if lastpos.direction == Game.NORTH
         player.addToLine(new Position([lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)], Game.NORTH, new_time))
+      @walls.update_wall(@players.indexOf(player), new walls.WallSegment(lastpos, player.currentLinePos(), player))
+      return new walls.WallSegment(lastpos, player.currentLinePos(), player)
 
 
     render_game: ->
@@ -126,10 +123,12 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
       fn(this) for fn in @after_fns
       @after_fns = []
 
-      @move_players(elapsed_time, new_time)
+      segments = @move_players(elapsed_time, new_time)
 
       if Game.use_collisions
-        @handle_collisions(player) for player in @players.slice()
+        for segment in segments
+          collisions = @walls.detect_collisions(segment)
+          console.log "Collisions: ", collisions
 
       @handle_input(new_time)
       @render_game() if @browser
