@@ -128,6 +128,9 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
       if Game.use_collisions
         for segment in segments
           collisions = @walls.detect_collisions(segment)
+          for listener in @listeners
+            for collision in collisions
+              listener.notify(collision[0].player, collision[1].player, collision[2]) if collision != false
           console.log "Collisions: ", collisions
 
       @handle_input(new_time)

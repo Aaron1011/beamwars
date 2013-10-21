@@ -38,7 +38,7 @@ define(['fabric'], (fabric) ->
 
     intersection_with: (segment) ->
       intersection = fabric.Intersection.intersectLineLine(@endpoint1.pos, @endpoint2.pos, segment.endpoint1.pos, segment.endpoint2.pos)
-      return [this, segment] if intersection.status == "Intersection" || intersection.status == "Coincident"
+      return [this, segment, intersection.points[0]] if intersection.status == "Intersection" || intersection.status == "Coincident"
       return false
 
   class Walls
