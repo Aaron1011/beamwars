@@ -3,7 +3,9 @@ require.config({
         jquery: 'lib/jquery',
         'jasmine': 'lib/jasmine-1.3.1/jasmine',
         'jasmine-html': 'lib/jasmine-1.3.1/jasmine-html',
+        fabric: 'lib/fabric'
     },
+
     shim: {
         jasmine: {
             exports: 'jasmine'
@@ -16,9 +18,8 @@ require.config({
 })
 
 require(['jquery', 'jasmine-html'], ($, jasmine) ->
-
     jasmineEnv = jasmine.getEnv()
-    jasmineEnv.updateInterval = 1500
+    jasmineEnv.updateInterval = 1000
 
     htmlReporter = new jasmine.HtmlReporter()
 
