@@ -23,8 +23,8 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
     @EAST = 2
     @WEST = 3
 
-    @WIDTH:  if window? then window.canvas.width else 800
-    @HEIGHT:  if window? then window.canvas.height else 800
+    @WIDTH:  if window? window.canvas.width else 800
+    @HEIGHT:  if window?  window.canvas.height else 800
 
     @VELOCITY = 100
 
