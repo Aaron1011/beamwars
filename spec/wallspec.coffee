@@ -1,5 +1,5 @@
 requirejs.config({
-    baseUrl: '../',
+  #baseUrl: '../',
 })
 
 require(['game', 'walls', 'synchronizedtime'], (Game, Walls, SynchronizedTime) ->
@@ -13,4 +13,4 @@ require(['game', 'walls', 'synchronizedtime'], (Game, Walls, SynchronizedTime) -
     it "detects a collision", ->
       SynchronizedTime.setTimeForTesting(0)
       game.start()
-
+)
