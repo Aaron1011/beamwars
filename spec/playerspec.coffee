@@ -1,8 +1,8 @@
 requirejs.config({
-    baseUrl: '../',
+  #baseUrl: '../',
 })
 
-require(['player'], (Player) ->
+define(['player'], (Player) ->
     describe "Player", ->
       player = null
 
