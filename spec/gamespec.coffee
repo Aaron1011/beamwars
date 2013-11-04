@@ -1,5 +1,5 @@
 requirejs.config({
-    baseUrl: '../',
+    #baseUrl: 'beamwars/',
     #paths: {
     #  'paper': 'lib/paper'
     #}
@@ -10,7 +10,7 @@ requirejs.config({
     #}
 })
 
-require(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, SynchronizedTime, Point) ->
+define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, SynchronizedTime, Point) ->
   describe "Game", ->
     game = null
 
