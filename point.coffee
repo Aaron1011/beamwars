@@ -14,9 +14,26 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define([], ->
+define(['game'], (Game) ->
+
   class Point
     constructor: (@x, @y) ->
+
+    @unit_vector: (direction) ->
+      if direction == Game.NORTH
+        new Point(0, 1)
+      else if direction == Game.SOUTH
+        new Point(0, -1)
+      else if direction == Game.WEST
+        new Point(-1, 0)
+      else
+        new Point(1, 0)
+
+    multiply: (scalar) ->
+      new Point(@x * scalar, @y * scalar)
+
+    add: (point) ->
+      new Point(@x + point.x, @y + point.y)
 
   Point
 )

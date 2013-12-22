@@ -13,6 +13,10 @@ requirejs.config({
 define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, SynchronizedTime, Point) ->
   describe "Game", ->
     game = null
+    KEY_WEST = 37
+    KEY_NORTH = 38
+    KEY_EAST = 39
+    KEY_SOUTH = 40
 
     beforeEach(() ->
       game = new Game()
@@ -27,16 +31,20 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
               new Position([0, Game.HEIGHT/2], Game.EAST, 0)]).toEqual(game.getPositions())
 
 
-    it "moves players foward after timer tick", ->
-      SynchronizedTime.setTimeForTesting(0)
+    it "turns players correctly", ->
       game.start()
-      expect(game.getCurrentLines()).toEqual([ [], [], [], [] ])
-      SynchronizedTime.setTimeForTesting(0.1)
+      timeToTraverse = Game.WIDTH / Game.VELOCITY
+      SynchronizedTime.setTimeForTesting(timeToTraverse / 4.0)
       game.timer_tick()
-      expect(game.getCurrentLines()).toEqual([[new Position([Game.WIDTH/2, 0 + Game.VELOCITY*.1], Game.SOUTH, .1)],
-                                             [new Position([Game.WIDTH - Game.VELOCITY*.1, Game.HEIGHT/2], Game.WEST, .1)],
-                                             [new Position([Game.WIDTH/2, Game.HEIGHT - Game.VELOCITY*.1], Game.NORTH, .1)],
-                                             [new Position([0 + Game.VELOCITY*.1, Game.HEIGHT/2], Game.EAST, .1)]])
+      game.keyDown(game.player0, KEY_WEST, game.player0.currentLinePos())
+      SynchronizedTime.setTimeForTesting(SynchronizedTime.getTime() + timeToTraverse / 8.0)
+      game.timer_tick()
+
+      expect([game.player0.currentLinePos().x, game.player0.currentLinePos().y]).toEqual(
+          [Game.WIDTH * 0.375, Game.HEIGHT * 0.25])
+      expect([game.player1.currentLinePos().x, game.player1.currentLinePos().y]).toEqual(
+          [Game.WIDTH * 0.625, Game.HEIGHT * .5])
+
 
     describe "listener", ->
       listener = null

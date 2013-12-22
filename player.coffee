@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define(['fabric'], (fabric) ->
+define(['fabric', 'synchronizedtime', 'point'], (fabric, SynchronizedTime, Point) ->
   fabric = fabric.fabric if fabric.fabric?
 
   class Player
@@ -22,7 +22,6 @@ define(['fabric'], (fabric) ->
     constructor: (@name, pos, @canvas, @game) ->
       @positions = []
       @positions.push(pos)
-      @unverified_positions = []
       @current_line = new fabric.Polyline([], {
         stroke: 'blue',
         strokeWidth: 5,
@@ -34,6 +33,13 @@ define(['fabric'], (fabric) ->
     lastPos: ->
       @positions[@positions.length - 1]
 
+
+    currentPosition: ->
+      lastpos = @positions[@positions.length - 1]
+      distance = (SynchronizedTime.getTime() - lastpos.time) * @game.VELOCITY
+      lastpos.pos.add(Point.unit_vector(lastpos.direction).multiply(distance))
+
+
     resetLine: ->
       new_line = @currentLine()
       lastpos = @lastPos()
@@ -44,16 +50,6 @@ define(['fabric'], (fabric) ->
           old_time = pos.time
         else
           @unverified_positions.splice(@unverified_positions.indexOf(pos), 1)
-
-    currentLine: ->
-      @unverified_positions.slice() # Copy array
-
-    currentLinePos: ->
-      return [] unless @unverified_positions.length > 0
-      @unverified_positions[@unverified_positions.length - 1]
-
-    addToLine: (pos) ->
-      @unverified_positions.push(pos)
 
     setupLine: ->
       @current_line.points = @completeLine()

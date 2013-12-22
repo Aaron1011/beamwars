@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener', 'walls'], (Position, Player, SynchronizedTime, Point, SinglePlayerListener, walls) ->
+define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls'], (Position, Player, SynchronizedTime, SinglePlayerListener, walls) ->
 
   class Game
 
@@ -55,7 +55,18 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
 
       @old_time = SynchronizedTime.getTime()
 
-    key_down: (player, key, coord) ->
+    keyDown: (player, key, coord) ->
+      pos = player.lastPos()
+      pos.pos = coord
+      switch key
+        when 37
+          pos.direction = Game.WEST
+        when 38
+          pos.direction = Game.NORTH
+        when 39
+          pos.direction = Game.EAST
+        when 40
+          pos.direction = Game.SOUTH
 
     getPositions: ->
       p.lastPos() for p in @players
@@ -74,8 +85,7 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
         segments.push(@move_player(player, elapsed_time, new_time))
       segments
 
-    move_player: (player, elapsed_time, new_time, lastpos2) ->
-      lastpos = player.currentLinePos()
+    move_player: (player, elapsed_time, new_time) ->
       lastpos = player.lastPos() if !lastpos or lastpos.length == 0
       lastpos = lastpos2 if lastpos2?
       if lastpos.direction == Game.WEST
@@ -123,17 +133,17 @@ define(['position', 'player', 'synchronizedtime', 'point', 'singleplayerlistener
       fn(this) for fn in @after_fns
       @after_fns = []
 
-      segments = @move_players(elapsed_time, new_time)
+      #segments = @move_players(elapsed_time, new_time)
 
       if Game.use_collisions
-        for segment in segments
-          collisions = @walls.detect_collisions(segment)
-          for listener in @listeners
-            for collision in collisions
+        for player in @players
+          collisions = @walls.add_point(player, player.currentPosition())
+          for collision in collisions
+            for listener in @listeners
               listener.notify(collision[0].player, collision[1].player, collision[2]) if collision != false
           console.log "Collisions: ", collisions
 
-      @handle_input(new_time)
+      #@handle_input(new_time)
       @render_game() if @browser
 
       @old_time = new_time
