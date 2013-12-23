@@ -27,9 +27,9 @@ define([], ->
 
     @unit_vector: (direction) ->
       if direction == Point.NORTH
-        new Point(0, 1)
-      else if direction == Point.SOUTH
         new Point(0, -1)
+      else if direction == Point.SOUTH
+        new Point(0, 1)
       else if direction == Point.WEST
         new Point(-1, 0)
       else
