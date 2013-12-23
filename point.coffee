@@ -14,17 +14,23 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define(['game'], (Game) ->
+define([], ->
 
   class Point
+
+    @NORTH = 0
+    @SOUTH = 1
+    @EAST = 2
+    @WEST = 3
+
     constructor: (@x, @y) ->
 
     @unit_vector: (direction) ->
-      if direction == Game.NORTH
+      if direction == Point.NORTH
         new Point(0, 1)
-      else if direction == Game.SOUTH
+      else if direction == Point.SOUTH
         new Point(0, -1)
-      else if direction == Game.WEST
+      else if direction == Point.WEST
         new Point(-1, 0)
       else
         new Point(1, 0)

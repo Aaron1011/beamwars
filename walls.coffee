@@ -1,4 +1,4 @@
-define(['fabric'], (fabric) ->
+define(['fabric', 'point'], (fabric, Point) ->
   fabric = fabric.fabric if fabric.fabric?
 
   VERTICAL = 'v'
@@ -46,6 +46,8 @@ define(['fabric'], (fabric) ->
       @walls = { 'v': [], 'h': [] }
       @most_recent_walls = [null] * @Game.players.length
 
+    add_point: -> []
+
     update_wall: (player_no, segment) ->
       last_wall = @most_recent_walls[player_no]
       if last_wall? and segment.orientation == last_wall.orientation
@@ -75,7 +77,7 @@ define(['fabric'], (fabric) ->
       @walls[player.name] ||= {0: [], 1: [], 2: [], 3: []}
       console.log "Walls: ", @walls[player.name][position.direction] if player.name == "Player0"
       for wall in @walls[player.name][position.direction]
-        if position.direction == @Game.NORTH or position.direction == @Game.SOUTH
+        if position.direction == Point.NORTH or position.direction == Point.SOUTH
           if wall.endpoint1.x == position.x
             if wall.endpoint1.y < position.y
               wall.endpoint2.y = position.y

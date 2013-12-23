@@ -25,10 +25,10 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
 
     it "starts players in the correct starting posititon", ->
       game.start()
-      expect([new Position([Game.WIDTH/2, 0], Game.SOUTH, 0),
-              new Position([Game.WIDTH, Game.HEIGHT/2], Game.WEST, 0),
-              new Position([Game.WIDTH/2, Game.HEIGHT], Game.NORTH, 0),
-              new Position([0, Game.HEIGHT/2], Game.EAST, 0)]).toEqual(game.getPositions())
+      expect([new Position([Game.WIDTH/2, 0], Point.SOUTH, 0),
+              new Position([Game.WIDTH, Game.HEIGHT/2], Point.WEST, 0),
+              new Position([Game.WIDTH/2, Game.HEIGHT], Point.NORTH, 0),
+              new Position([0, Game.HEIGHT/2], Point.EAST, 0)]).toEqual(game.getPositions())
 
 
     it "turns players correctly", ->
@@ -36,13 +36,14 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
       timeToTraverse = Game.WIDTH / Game.VELOCITY
       SynchronizedTime.setTimeForTesting(timeToTraverse / 4.0)
       game.timer_tick()
-      game.keyDown(game.player0, KEY_WEST, game.player0.currentLinePos())
+      game.storeKeyPress(KEY_WEST)
+      game.handle_input(SynchronizedTime.getTime())
       SynchronizedTime.setTimeForTesting(SynchronizedTime.getTime() + timeToTraverse / 8.0)
       game.timer_tick()
 
-      expect([game.player0.currentLinePos().x, game.player0.currentLinePos().y]).toEqual(
+      expect([game.player0.currentPosition().x, game.player0.currentPosition().y]).toEqual(
           [Game.WIDTH * 0.375, Game.HEIGHT * 0.25])
-      expect([game.player1.currentLinePos().x, game.player1.currentLinePos().y]).toEqual(
+      expect([game.player1.currentPosition().x, game.player1.currentPosition().y]).toEqual(
           [Game.WIDTH * 0.625, Game.HEIGHT * .5])
 
 
@@ -57,16 +58,16 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
       )
 
       it "notifies the listeners about a head-collision for each player", ->
-        game.player0.addToLine(new Position([1, 0], Game.EAST, 0))
-        game.player1.addToLine(new Position([3, 0], Game.WEST, 0))
+        game.player0.addToLine(new Position([1, 0], Point.EAST, 0))
+        game.player1.addToLine(new Position([3, 0], Point.WEST, 0))
         SynchronizedTime.setTimeForTesting(1)
         game.timer_tick()
         expect(listener.notify).toHaveBeenCalledWith(game.player1, game.player0, new Point(2,0))
         expect(listener.notify).toHaveBeenCalledWith(game.player0, game.player1, new Point(2,0))
 
       it "notifies the listeners about a one-way collision for the collided player", ->
-        game.player0.addToLine(new Position([0, 0], Game.EAST, 0))
-        game.player1.addToLine(new Position([0, 1], Game.NORTH, 0))
+        game.player0.addToLine(new Position([0, 0], Point.EAST, 0))
+        game.player1.addToLine(new Position([0, 1], Point.NORTH, 0))
         SynchronizedTime.setTimeForTesting(1)
         game.timer_tick()
         expect(listener.notify).toHaveBeenCalledWith(game.player1, game.player0, new Point(0,0))

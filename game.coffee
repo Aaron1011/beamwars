@@ -14,14 +14,9 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls'], (Position, Player, SynchronizedTime, SinglePlayerListener, walls) ->
+define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls', 'point'], (Position, Player, SynchronizedTime, SinglePlayerListener, walls, Point) ->
 
   class Game
-
-    @NORTH = 0
-    @SOUTH = 1
-    @EAST = 2
-    @WEST = 3
 
     @WIDTH:  if window? window.canvas.width else 800
     @HEIGHT:  if window?  window.canvas.height else 800
@@ -40,10 +35,10 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
 
     start: ->
-      @player0 = new Player("Player0", new Position([Game.WIDTH/2, 0], Game.SOUTH, 0), @canvas, this)
-      @player1 = new Player("Player1", new Position([Game.WIDTH, Game.HEIGHT/2], Game.WEST, 0), @canvas, this)
-      @player2 = new Player("Player2", new Position([Game.WIDTH/2, Game.HEIGHT], Game.NORTH, 0), @canvas, this)
-      @player3 = new Player("Player3", new Position([0, Game.HEIGHT/2], Game.EAST, 0), @canvas, this)
+      @player0 = new Player("Player0", new Position([Game.WIDTH/2, 0], Point.SOUTH, 0), @canvas, this)
+      @player1 = new Player("Player1", new Position([Game.WIDTH, Game.HEIGHT/2], Point.WEST, 0), @canvas, this)
+      @player2 = new Player("Player2", new Position([Game.WIDTH/2, Game.HEIGHT], Point.NORTH, 0), @canvas, this)
+      @player3 = new Player("Player3", new Position([0, Game.HEIGHT/2], Point.EAST, 0), @canvas, this)
 
       @players = [@player0, @player1, @player2, @player3]
       @player0.current_line.stroke = 'green'
@@ -60,13 +55,13 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       pos.pos = coord
       switch key
         when 37
-          pos.direction = Game.WEST
+          pos.direction = Point.WEST
         when 38
-          pos.direction = Game.NORTH
+          pos.direction = Point.NORTH
         when 39
-          pos.direction = Game.EAST
+          pos.direction = Point.EAST
         when 40
-          pos.direction = Game.SOUTH
+          pos.direction = Point.SOUTH
 
     getPositions: ->
       p.lastPos() for p in @players
@@ -88,14 +83,14 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
     move_player: (player, elapsed_time, new_time) ->
       lastpos = player.lastPos() if !lastpos or lastpos.length == 0
       lastpos = lastpos2 if lastpos2?
-      if lastpos.direction == Game.WEST
-        player.addToLine(new Position([lastpos.x - (Game.VELOCITY * elapsed_time), lastpos.y], Game.WEST, new_time))
-      else if lastpos.direction == Game.EAST
-        player.addToLine(new Position([lastpos.x + (Game.VELOCITY * elapsed_time), lastpos.y], Game.EAST, new_time))
-      else if lastpos.direction == Game.SOUTH
-        player.addToLine(new Position([lastpos.x, lastpos.y + (Game.VELOCITY * elapsed_time)], Game.SOUTH, new_time))
-      else if lastpos.direction == Game.NORTH
-        player.addToLine(new Position([lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)], Game.NORTH, new_time))
+      if lastpos.direction == Point.WEST
+        player.addToLine(new Position([lastpos.x - (Game.VELOCITY * elapsed_time), lastpos.y], Point.WEST, new_time))
+      else if lastpos.direction == Point.EAST
+        player.addToLine(new Position([lastpos.x + (Game.VELOCITY * elapsed_time), lastpos.y], Point.EAST, new_time))
+      else if lastpos.direction == Point.SOUTH
+        player.addToLine(new Position([lastpos.x, lastpos.y + (Game.VELOCITY * elapsed_time)], Point.SOUTH, new_time))
+      else if lastpos.direction == Point.NORTH
+        player.addToLine(new Position([lastpos.x, lastpos.y - (Game.VELOCITY * elapsed_time)], Point.NORTH, new_time))
       @walls.update_wall(@players.indexOf(player), new walls.WallSegment(lastpos, player.currentLinePos(), player))
       return new walls.WallSegment(lastpos, player.currentLinePos(), player)
 
@@ -108,21 +103,17 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       @key = keyCode
 
     handle_input: (time) ->
-      lastpos = @player0.currentLinePos()
+      lastpos = @player0.currentPosition()
       player = @player0
       switch @key
         when 37
-          player.positions.push(new Position([lastpos.x, lastpos.y], Game.WEST, time))
-          player.resetLine()
+          player.positions.push(new Position([lastpos.x, lastpos.y], Point.WEST, time))
         when 38
-          player.positions.push(new Position([lastpos.x, lastpos.y], Game.NORTH, time))
-          player.resetLine()
+          player.positions.push(new Position([lastpos.x, lastpos.y], Point.NORTH, time))
         when 39
-          player.positions.push(new Position([lastpos.x, lastpos.y], Game.EAST, time))
-          player.resetLine()
+          player.positions.push(new Position([lastpos.x, lastpos.y], Point.EAST, time))
         when 40
-          player.positions.push(new Position([lastpos.x, lastpos.y], Game.SOUTH, time))
-          player.resetLine()
+          player.positions.push(new Position([lastpos.x, lastpos.y], Point.SOUTH, time))
 
       @key = null
 

@@ -20,8 +20,7 @@ define(['fabric', 'synchronizedtime', 'point'], (fabric, SynchronizedTime, Point
   class Player
 
     constructor: (@name, pos, @canvas, @game) ->
-      @positions = []
-      @positions.push(pos)
+      @positions = [pos]
       @current_line = new fabric.Polyline([], {
         stroke: 'blue',
         strokeWidth: 5,
@@ -36,7 +35,7 @@ define(['fabric', 'synchronizedtime', 'point'], (fabric, SynchronizedTime, Point
 
     currentPosition: ->
       lastpos = @positions[@positions.length - 1]
-      distance = (SynchronizedTime.getTime() - lastpos.time) * @game.VELOCITY
+      distance = (SynchronizedTime.getTime() - lastpos.time) * @game.constructor.VELOCITY
       lastpos.pos.add(Point.unit_vector(lastpos.direction).multiply(distance))
 
 
