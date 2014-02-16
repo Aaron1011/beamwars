@@ -18,8 +18,8 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
   class Game
 
-    @WIDTH:  if window? window.canvas.width else 800
-    @HEIGHT:  if window?  window.canvas.height else 800
+    @WIDTH:  800
+    @HEIGHT:  800
 
     @VELOCITY = 100
 
