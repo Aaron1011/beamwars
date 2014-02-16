@@ -18,13 +18,15 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
     KEY_EAST = 39
     KEY_SOUTH = 40
 
+    timeToTraverse = null
+
     beforeEach(() ->
       game = new Game()
-      Game.VELOCITY = 1
+      timeToTraverse = Game.WIDTH / Game.VELOCITY
+      game.start()
     )
 
     it "starts players in the correct starting posititon", ->
-      game.start()
       expect([new Position([Game.WIDTH/2, 0], Point.SOUTH, 0),
               new Position([Game.WIDTH, Game.HEIGHT/2], Point.WEST, 0),
               new Position([Game.WIDTH/2, Game.HEIGHT], Point.NORTH, 0),
@@ -32,12 +34,9 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
 
 
     it "turns players correctly", ->
-      game.start()
-      timeToTraverse = Game.WIDTH / Game.VELOCITY
       SynchronizedTime.setTimeForTesting(timeToTraverse / 4.0)
       game.timer_tick()
-      game.storeKeyPress(KEY_WEST)
-      game.handle_input(SynchronizedTime.getTime())
+      game.handle_input(0, KEY_WEST, SynchronizedTime.getTime())
       SynchronizedTime.setTimeForTesting(SynchronizedTime.getTime() + timeToTraverse / 8.0)
       game.timer_tick()
 
@@ -47,29 +46,52 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
           [Game.WIDTH * 0.625, Game.HEIGHT * .5])
 
 
-    describe "listener", ->
+	#it "allows last turn insertion" ->
+
+    #it "doesn't allow inserting a turn before the last one" ->
+
+    #it "accurately reports the position of a player at any time in the past" ->
+
+
+
+    describe "collision behavior", ->
       listener = null
 
       beforeEach(() ->
         listener = jasmine.createSpyObj('listener', ['notify'])
         SynchronizedTime.setTimeForTesting(0)
         game.addListener(listener)
-        game.start()
       )
+       
 
-      it "notifies the listeners about a head-collision for each player", ->
-        game.player0.addToLine(new Position([1, 0], Point.EAST, 0))
-        game.player1.addToLine(new Position([3, 0], Point.WEST, 0))
-        SynchronizedTime.setTimeForTesting(1)
-        game.timer_tick()
-        expect(listener.notify).toHaveBeenCalledWith(game.player1, game.player0, new Point(2,0))
-        expect(listener.notify).toHaveBeenCalledWith(game.player0, game.player1, new Point(2,0))
+      it "notifies the listeners about a head-collision for the current player", ->
 
-      it "notifies the listeners about a one-way collision for the collided player", ->
-        game.player0.addToLine(new Position([0, 0], Point.EAST, 0))
-        game.player1.addToLine(new Position([0, 1], Point.NORTH, 0))
-        SynchronizedTime.setTimeForTesting(1)
+        SynchronizedTime.setTimeForTesting(timeToTraverse * .375)
         game.timer_tick()
-        expect(listener.notify).toHaveBeenCalledWith(game.player1, game.player0, new Point(0,0))
-        expect(listener.notify).not.toHaveBeenCalledWith(game.player0, game.player1, new Point(0,0))
+        game.handle_input(0, KEY_EAST, SynchronizedTime.getTime())
+        game.handle_input(2, KEY_WEST, SynchronizedTime.getTime())
+        SynchronizedTime.setTimeForTesting(timeToTraverse * .55)
+        game.timer_tick()
+        expect(listener.notify).toHaveBeenCalledWith(game.player1, game.player3, new Point(Game.WITDTH/2, Game.HEIGHT/2))
+
+      it "notifies the listeners about a one-way collision for the current player", ->
+        SynchronizedTime.setTimeForTesting(timeToTraverse * .375)
+        game.timer_tick()
+        game.handle_input(0, KEY_EAST, SynchronizedTime.getTime())
+        game.handle_input(1, KEY_SOUTH, SynchronizedTime.getTime())
+        game.handle_input(2, KEY_WEST, SynchronizedTime.getTime())
+        SynchronizedTime.setTimeForTesting(timeToTraverse * .63)
+        game.timer_tick()
+        expect(listener.notify).toHaveBeenCalledWith(game.player3, game.player1, new Point(Game.WIDTH * .63, Game.HEIGHT/2))
+
+      it "notifies the listeners about a collision coming from another player", ->
+        SynchronizedTime.setTimeForTesting(timeToTraverse * .375)
+        game.timer_tick()
+        game.handle_input(0, KEY_EAST, SynchronizedTime.getTime())
+        game.handle_input(2, KEY_WEST, SynchronizedTime.getTime())
+        SynchronizedTime.setTimeForTesting(timeToTraverse * .55)
+        game.handleCollisionMessage(2, 0, SynchronizedTime.getTime())
+        game.timer_tick()
+        expect(listener.notify).toHaveBeenCalledWith(game.player0, game.player1, new Point(Game.WITDTH/2, Game.HEIGHT/2))
+
 )

@@ -99,13 +99,10 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       p.setupLine() for p in @players
       @canvas.renderAll()
 
-    storeKeyPress: (keyCode) ->
-      @key = keyCode
-
-    handle_input: (time) ->
-      lastpos = @player0.currentPosition()
-      player = @player0
-      switch @key
+    handle_input: (player, key, time) ->
+      lastpos = @players[player].currentPosition()
+      player = @players[player]
+      switch key
         when 37
           player.positions.push(new Position([lastpos.x, lastpos.y], Point.WEST, time))
         when 38
@@ -115,7 +112,6 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
         when 40
           player.positions.push(new Position([lastpos.x, lastpos.y], Point.SOUTH, time))
 
-      @key = null
 
     timer_tick: ->
       new_time = SynchronizedTime.getTime()
