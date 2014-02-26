@@ -19,15 +19,8 @@ define(['fabric', 'synchronizedtime', 'point'], (fabric, SynchronizedTime, Point
 
   class Player
 
-    constructor: (@name, pos, @canvas, @game) ->
+    constructor: (@name, pos, @game) ->
       @positions = [pos]
-      @current_line = new fabric.Polyline([], {
-        stroke: 'blue',
-        strokeWidth: 5,
-        fill: 'white'
-        left: 0
-        top: 0
-      })
 
     lastPos: ->
       @positions[@positions.length - 1]

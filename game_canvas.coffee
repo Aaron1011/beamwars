@@ -34,4 +34,8 @@ define ['fabric', 'lib/underscore'], (fabric) ->
     getHeight: ->
       @canvas.getHeight()
 
+    notify: (eventType, data) ->
+      if eventType == 'Tick'
+        @timerTick(data)
+
   GameCanvas

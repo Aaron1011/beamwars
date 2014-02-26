@@ -25,27 +25,26 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
     @use_collisions = false
 
-    constructor: (@canvas) ->
+    constructor: () ->
       @players = []
       @killedPlayers = []
-      @listeners = []
+      @collide_listeners = []
+      @canvas_listeners = []
       @browser = false
       @after_fns = []
       @walls = new walls.Walls(this)
 
 
     start: ->
-      @player0 = new Player("Player0", new Position([Game.WIDTH/2, 0], Point.SOUTH, 0), @canvas, this)
-      @player1 = new Player("Player1", new Position([Game.WIDTH, Game.HEIGHT/2], Point.WEST, 0), @canvas, this)
-      @player2 = new Player("Player2", new Position([Game.WIDTH/2, Game.HEIGHT], Point.NORTH, 0), @canvas, this)
-      @player3 = new Player("Player3", new Position([0, Game.HEIGHT/2], Point.EAST, 0), @canvas, this)
+      @player0 = new Player("Player0", new Position([Game.WIDTH/2, 0], Point.SOUTH, 0), this)
+      @player1 = new Player("Player1", new Position([Game.WIDTH, Game.HEIGHT/2], Point.WEST, 0),  this)
+      @player2 = new Player("Player2", new Position([Game.WIDTH/2, Game.HEIGHT], Point.NORTH, 0),  this)
+      @player3 = new Player("Player3", new Position([0, Game.HEIGHT/2], Point.EAST, 0),  this)
 
       @players = [@player0, @player1, @player2, @player3]
-      @player0.current_line.stroke = 'green'
 
       if @browser
-        @canvas.add(p.current_line) for p in @players
-        @listeners.push(new SinglePlayerListener(this))
+        @collide_listeners.push(new SinglePlayerListener(this))
 
 
       @old_time = SynchronizedTime.getTime()
@@ -95,9 +94,6 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       return new walls.WallSegment(lastpos, player.currentLinePos(), player)
 
 
-    render_game: ->
-      p.setupLine() for p in @players
-      @canvas.renderAll()
 
     handle_input: (player, key, time=SynchronizedTime.getTime()) ->
       lastpos = @players[player].currentPosition(time)
@@ -117,7 +113,6 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
     timer_tick: ->
       new_time = SynchronizedTime.getTime()
-      elapsed_time = new_time - @old_time
 
       fn(this) for fn in @after_fns
       @after_fns = []
@@ -128,17 +123,22 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
         for player in @players
           collisions = @walls.add_point(player, player.currentPosition())
           for collision in collisions
-            for listener in @listeners
+            for listener in @collide_listeners
               listener.notify(collision[0].player, collision[1].player, collision[2]) if collision != false
           console.log "Collisions: ", collisions
 
+      for listener in @canvas_listeners
+        listener.notify('Tick', (p.currentPosition() for p in @players))
+
       #@handle_input(new_time)
-      @render_game() if @browser
 
       @old_time = new_time
 
     addListener: (listener) ->
-      @listeners.push(listener)
+      @collide_listeners.push(listener)
+
+    addCanvasListener: (listener) ->
+      @canvas_listeners.push(listener)
 
     runAfterTick: (fn) ->
       @after_fns.push(fn)

@@ -12,9 +12,16 @@ require ['game_canvas', 'game', 'synchronizedtime', 'position', 'lib/fabric', 'l
   console.log "Canvas: ", $("#canvas")
 
   window.game_canvas = new Canvas('canvas')
+  window.game = new Game()
+  SynchronizedTime.setTimeForTesting(0)
+  game.start()
+
+  game.addCanvasListener(game_canvas)
   
   $("#change").click(->
-    game_canvas.timerTick([{'x': 400, 'y': 100}, {x: 700, y: 400}, {x: 400, y: 700}, {x: 100, y: 400}])
+    SynchronizedTime.setTimeForTesting(parseFloat($("#time").val()))
+    game.timer_tick()
+    #game_canvas.timerTick([{'x': 400, 'y': 100}, {x: 700, y: 400}, {x: 400, y: 700}, {x: 100, y: 400}])
   )
 
   ###
