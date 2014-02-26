@@ -23,6 +23,8 @@ define ['fabric', 'lib/underscore'], (fabric) ->
       @canvas.renderAll()
      
     turn: (playerIndex, turnPos, currentPos) ->
+      console.log "Turn!"
+      console.log playerIndex
       line = @lines[playerIndex]
       line.points.pop()
       line.points.push(turnPos)
@@ -35,7 +37,10 @@ define ['fabric', 'lib/underscore'], (fabric) ->
       @canvas.getHeight()
 
     notify: (eventType, data) ->
-      if eventType == 'Tick'
-        @timerTick(data)
+      switch eventType
+        when 'Tick'
+          @timerTick(data)
+        when 'Turn'
+          @turn(data[0], data[1], data[2])
 
   GameCanvas

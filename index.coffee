@@ -24,6 +24,11 @@ require ['game_canvas', 'game', 'synchronizedtime', 'position', 'lib/fabric', 'l
     #game_canvas.timerTick([{'x': 400, 'y': 100}, {x: 700, y: 400}, {x: 400, y: 700}, {x: 100, y: 400}])
   )
 
+  $("#turn").click(->
+    console.log "Click!"
+    game.handle_input(parseInt($("#player").val()), parseInt($("#direction").val()), parseFloat($("#turn_time").val()))
+    game.timer_tick()
+  )
   ###
   setInterval((->
     SynchronizedTime.time += 1/10

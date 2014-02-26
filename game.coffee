@@ -95,9 +95,9 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
 
 
-    handle_input: (player, key, time=SynchronizedTime.getTime()) ->
-      lastpos = @players[player].currentPosition(time)
-      player = @players[player]
+    handle_input: (player_index, key, time=SynchronizedTime.getTime()) ->
+      lastpos = @players[player_index].currentPosition(time)
+      player = @players[player_index]
       if player.lastPos().time > time
         throw Error('IllegalTurnException')
       switch key
@@ -109,6 +109,10 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
           player.positions.push(new Position([lastpos.x, lastpos.y], Point.EAST, time))
         when 40
           player.positions.push(new Position([lastpos.x, lastpos.y], Point.SOUTH, time))
+
+      for listener in @canvas_listeners
+        listener.notify('Turn', [player_index, player.lastPos(), player.currentPosition(time)])
+
 
 
     timer_tick: ->
