@@ -33,9 +33,9 @@ define(['fabric', 'synchronizedtime', 'point'], (fabric, SynchronizedTime, Point
       @positions[@positions.length - 1]
 
 
-    currentPosition: ->
+    currentPosition: (time=SynchronizedTime.getTime()) ->
       lastpos = @positions[@positions.length - 1]
-      distance = (SynchronizedTime.getTime() - lastpos.time) * @game.constructor.VELOCITY
+      distance = (time - lastpos.time) * @game.constructor.VELOCITY
       lastpos.pos.add(Point.unit_vector(lastpos.direction).multiply(distance))
 
 

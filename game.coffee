@@ -23,7 +23,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
     @VELOCITY = 100
 
-    @use_collisions = true
+    @use_collisions = false
 
     constructor: (@canvas) ->
       @players = []
@@ -99,9 +99,11 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       p.setupLine() for p in @players
       @canvas.renderAll()
 
-    handle_input: (player, key, time) ->
-      lastpos = @players[player].currentPosition()
+    handle_input: (player, key, time=SynchronizedTime.getTime()) ->
+      lastpos = @players[player].currentPosition(time)
       player = @players[player]
+      if player.lastPos().time > time
+        throw Error('IllegalTurnException')
       switch key
         when 37
           player.positions.push(new Position([lastpos.x, lastpos.y], Point.WEST, time))
