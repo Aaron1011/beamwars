@@ -5,26 +5,24 @@ requirejs.config({
   }
 })
 
-define ['game', 'synchronizedtime', 'position', 'lib/fabric', 'lib/jquery'], (Game, SynchronizedTime, Position) -> # Fabric is deliberately not set as an argument
-
-  canvas = $("#canvas")
-  canvas.width = document.body.clientWidth
-  canvas.height = document.body.clientHeight
+require ['game_canvas', 'game', 'synchronizedtime', 'position', 'lib/fabric', 'lib/jquery'], (Canvas, Game, SynchronizedTime, Position) -> # Fabric is deliberately not set as an argument
 
   console.log "Fabric: ", fabric
   console.log "Position: ", new Position([1,2], 0, 5)
-  canvas = new fabric.Canvas('canvas', {renderOnAddRemove: false})
-  window.canvas = canvas
+  console.log "Canvas: ", $("#canvas")
 
-  game = new Game(canvas)
-  game.browser = true
-  $(document).keydown (e) -> game.keyDown(e.which)
+  window.game_canvas = new Canvas('canvas')
+  
+  $("#change").click(->
+    game_canvas.timerTick([{'x': 400, 'y': 100}, {x: 700, y: 400}, {x: 400, y: 700}, {x: 100, y: 400}])
+  )
 
-  game.start()
+  ###
   setInterval((->
     SynchronizedTime.time += 1/10
     game.timer_tick()
     ),
     100
   )
+  ###
 
