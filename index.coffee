@@ -29,6 +29,11 @@ require ['game_canvas', 'game', 'synchronizedtime', 'position', 'lib/fabric', 'l
     game.handle_input(parseInt($("#player").val()), parseInt($("#direction").val()), parseFloat($("#turn_time").val()))
     game.timer_tick()
   )
+
+  $("#collide").click(->
+    console.log "Collide!"
+    game_canvas.registerCollision(parseInt($("#collide_player").val()))
+  )
   ###
   setInterval((->
     SynchronizedTime.time += 1/10
