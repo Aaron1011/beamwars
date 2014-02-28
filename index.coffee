@@ -7,6 +7,8 @@ requirejs.config({
 
 require ['game_canvas', 'game', 'synchronizedtime', 'position', 'lib/fabric', 'lib/jquery'], (Canvas, Game, SynchronizedTime, Position) -> # Fabric is deliberately not set as an argument
 
+  socket = io.connect('http://localhost')
+
   console.log "Fabric: ", fabric
   console.log "Position: ", new Position([1,2], 0, 5)
   console.log "Canvas: ", $("#canvas")
@@ -34,6 +36,8 @@ require ['game_canvas', 'game', 'synchronizedtime', 'position', 'lib/fabric', 'l
     console.log "Collide!"
     game_canvas.registerCollision(parseInt($("#collide_player").val()))
   )
+
+
   ###
   setInterval((->
     SynchronizedTime.time += 1/10
