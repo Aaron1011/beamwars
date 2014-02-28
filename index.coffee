@@ -34,8 +34,10 @@ require ['lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'position',
   game.addCanvasListener(game_canvas)
   
   $("#change").click(->
-    SynchronizedTime.setTimeForTesting(parseFloat($("#time").val()))
+    time = parseFloat($("#time").val())
+    SynchronizedTime.setTimeForTesting(time)
     game.timer_tick()
+    socket.emit('time', time) if $("#server_time").is(':checked')
     #game_canvas.timerTick([{'x': 400, 'y': 100}, {x: 700, y: 400}, {x: 400, y: 700}, {x: 100, y: 400}])
   )
 
@@ -59,6 +61,11 @@ require ['lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'position',
   socket.on 'turn', (data) ->
     console.log "Turn: ", data
     game.handle_input(data.player, data.direction, data.time)
+
+  socket.on 'time', (time) ->
+    console.log "Time: ", time
+    SynchronizedTime.setTimeForTesting(time)
+    game.timer_tick()
 
 
   ###

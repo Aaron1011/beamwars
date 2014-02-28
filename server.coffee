@@ -39,10 +39,11 @@ requirejs ['game', 'synchronizedtime', 'http'], (Game, SynchronizedTime, http) -
 
 
   io.sockets.on 'connection', (socket) ->
-    socket.on 'time', (data) ->
-      console.log "Time: ", data
-      SynchronizedTime.setTimeForTesting(data)
+    socket.on 'time', (time) ->
+      console.log "Time: ", time
+      SynchronizedTime.setTimeForTesting(time)
       console.log "New time: ", SynchronizedTime.getTime()
+      socket.broadcast.emit('time', time)
     socket.on 'turn', (data) ->
       console.log "Turn: ", data
       game.handle_input(data.player, data.direction, data.time)
