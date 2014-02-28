@@ -1,12 +1,19 @@
 requirejs.config({
+  shim: {
+      'socketio': {
+        exports: 'io'
+      }
+  }
   paths: {
     fabric: [
       'lib/fabric']
+    jquery: 'lib/jquery'
+
+    socketio: '/socket.io/socket.io',
   }
 })
 
-require ['game_canvas', 'game', 'synchronizedtime', 'position', 'lib/fabric', 'lib/jquery'], (Canvas, Game, SynchronizedTime, Position) -> # Fabric is deliberately not set as an argument
-
+require ['game_canvas', 'game', 'synchronizedtime', 'position', 'socketio', 'jquery', 'lib/fabric'], (Canvas, Game, SynchronizedTime, Position, io, $) -> # Fabric is deliberately not set as an argument
   socket = io.connect('http://localhost')
 
   console.log "Fabric: ", fabric

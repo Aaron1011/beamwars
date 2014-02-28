@@ -1,27 +1,37 @@
 requirejs = require("requirejs")
+express = require("express")
 
 requirejs.config({
     nodeRequire: require
+    shim: {
+      'socketio': {
+        exports: 'io'
+      }
+    }
+    paths: {
+        socketio: '../socket.io/socket.io',
+    }
 #    paths: {
 #      fabric: [
 #        'lib/fabric']
 #    }
 })
 
-requirejs ['game', 'synchronizedtime'], (Game, SynchronizedTime) ->
+requirejs ['game', 'synchronizedtime', 'http'], (Game, SynchronizedTime, http) ->
 
-  app = require("express")()
-  server = require('http').createServer(app)
+  app = express()
+
+  app.use express.static(__dirname)
+
+  server = http.createServer(app)
   io = require('socket.io').listen(server)
 
-#  game = new Game()
- # SynchronizedTime.setTimeForTesting(0)
- # game.start()
+  game = new Game()
+  SynchronizedTime.setTimeForTesting(0)
+  game.start()
 
   server.listen(8000)
 
-  app.get '/', (req, res) ->
-    res.sendfile(__dirname + '/index.html')
 
 
   io.sockets.on 'connection', (socket) ->
