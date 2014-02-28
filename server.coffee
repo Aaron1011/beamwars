@@ -7,9 +7,13 @@ requirejs.config({
       'socketio': {
         exports: 'io'
       }
+      'underscore': {
+        exports: 'underscore'
+      }
     }
     paths: {
         socketio: '../socket.io/socket.io',
+        underscore: 'lib/underscore'
     }
 #    paths: {
 #      fabric: [
@@ -39,4 +43,8 @@ requirejs ['game', 'synchronizedtime', 'http'], (Game, SynchronizedTime, http) -
       console.log "Time: ", data
       SynchronizedTime.setTimeForTesting(data)
       console.log "New time: ", SynchronizedTime.getTime()
+    socket.on 'turn', (data) ->
+      console.log "Turn: ", data
+      game.handle_input(data.player, data.direction, data.time)
+      socket.broadcast.emit('turn', data)
 

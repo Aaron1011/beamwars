@@ -1,8 +1,11 @@
 requirejs.config({
   shim: {
-      'socketio': {
-        exports: 'io'
-      }
+    'socketio': {
+      exports: 'io'
+    }
+    'underscore': {
+      exports: 'underscore'
+    }
   }
   paths: {
     fabric: [
@@ -10,11 +13,14 @@ requirejs.config({
     jquery: 'lib/jquery'
 
     socketio: '/socket.io/socket.io',
+    underscore: 'lib/underscore'
   }
 })
 
 require ['lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'position', 'socketio', 'jquery', 'lib/fabric'], (doc, Canvas, Game, SynchronizedTime, Position, io, $) -> # Fabric is deliberately not set as an argument
   socket = io.connect('http://localhost')
+
+
 
   console.log "Fabric: ", fabric
   console.log "Position: ", new Position([1,2], 0, 5)
@@ -35,14 +41,24 @@ require ['lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'position',
 
   $("#turn").click(->
     console.log "Click!"
-    game.handle_input(parseInt($("#player").val()), parseInt($("#direction").val()), parseFloat($("#turn_time").val()))
+
+    player = parseInt($("#player").val())
+    direction = parseInt($("#direction").val())
+    time = parseFloat($("#turn_time").val())
+
+    game.handle_input(player, direction, time)
     game.timer_tick()
+    socket.emit('turn', {player: player, direction: direction, time: time}) if $("#server_turn").is(':checked')
   )
 
   $("#collide").click(->
     console.log "Collide!"
     game_canvas.registerCollision(parseInt($("#collide_player").val()))
   )
+
+  socket.on 'turn', (data) ->
+    console.log "Turn: ", data
+    game.handle_input(data.player, data.direction, data.time)
 
 
   ###
@@ -53,4 +69,3 @@ require ['lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'position',
     100
   )
   ###
-

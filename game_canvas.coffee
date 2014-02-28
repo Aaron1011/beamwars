@@ -1,4 +1,4 @@
-define ['fabric', 'lib/underscore'], (fabric) ->
+define ['fabric', 'underscore'], (fabric, _) ->
 
   fabric = fabric.fabric if fabric.fabric?
 
