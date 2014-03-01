@@ -25,6 +25,12 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
     @use_collisions = false
 
+    @KEY_WEST = 37
+    @KEY_NORTH = 38
+    @KEY_EAST = 39
+    @KEY_SOUTH = 40
+
+
     constructor: () ->
       @players = []
       @killedPlayers = []

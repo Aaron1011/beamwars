@@ -66,13 +66,22 @@ require ['lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'position',
     console.log "Time: ", time
     SynchronizedTime.setTimeForTesting(time)
     game.timer_tick()
+    $("#time").val(time)
 
 
-  ###
+  $(document).keydown (e) ->
+    console.log "Key!"
+    if Game.KEY_WEST <= e.which <= Game.KEY_SOUTH
+      console.log "Yup!"
+      time = SynchronizedTime.getTime()
+      game.handle_input(0, e.which, time)
+      socket.emit('turn', {player: 0, direction: e.which, time: time})
+  
   setInterval((->
-    SynchronizedTime.time += 1/10
+    SynchronizedTime.time += 1/60
     game.timer_tick()
     ),
-    100
+    (1/60) * 1000
   )
-  ###
+
+  
