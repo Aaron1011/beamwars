@@ -65,7 +65,18 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
         expect(e.message).toEqual('IllegalTurnException') # TODO: Make constant
 
 
-    #it "accurately reports the position of a player at any time in the past" ->
+    it "accurately reports the position of a player at any time in the past", ->
+      pos = game.player0.currentPosition(0)
+      expect([pos.x, pos.y]).toEqual([Game.WIDTH / 2, 0])
+      pos = game.player0.currentPosition(timeToTraverse / 2)
+      expect([pos.x, pos.y]).toEqual([Game.WIDTH / 2, Game.HEIGHT / 2])
+
+      SynchronizedTime.setTimeForTesting(timeToTraverse / 2)
+      game.handle_input(0, KEY_WEST)
+      pos = game.player0.currentPosition(timeToTraverse * .75)
+      expect([pos.x, pos.y]).toEqual([Game.WIDTH *.25, Game.HEIGHT * .5])
+
+
 
 
 
