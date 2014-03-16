@@ -55,18 +55,6 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
       @old_time = SynchronizedTime.getTime()
 
-    keyDown: (player, key, coord) ->
-      pos = player.lastPos()
-      pos.pos = coord
-      switch key
-        when 37
-          pos.direction = Point.WEST
-        when 38
-          pos.direction = Point.NORTH
-        when 39
-          pos.direction = Point.EAST
-        when 40
-          pos.direction = Point.SOUTH
 
     getPositions: ->
       p.lastPos() for p in @players
@@ -101,7 +89,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
 
 
-    handle_input: (player_index, key, time=SynchronizedTime.getTime()) ->
+    handle_input: (player_index, key, time = SynchronizedTime.getTime()) ->
       lastpos = @players[player_index].currentPosition(time)
       player = @players[player_index]
       if player.lastPos().time > time
@@ -116,26 +104,38 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
         when 40
           player.positions.push(new Position([lastpos.x, lastpos.y], Point.SOUTH, time))
 
+
+      segment = new walls.WallSegment(lastpos, @players[player_index].currentPosition(time))
+      @walls.update_wall(player_index, segment)
+      @emit_collisions(segment)
+
       for listener in @canvas_listeners
         listener.notify('Turn', [player_index, player.lastPos(), player.currentPosition(time)])
 
 
+    emit_collisions: (segment) ->
+      if Game.use_collisions
+        for player, i in @players
+          @walls.update_wall(i, segment)
+          collisions = @walls.detect_collisions(segment)
+          for collision in collisions
+            for listener in @collide_listeners
+              listener.notify(collision[0].player, collision[1].player, collision[2]) if collision != false
+          console.log "Collisions: ", collisions
+
 
     timer_tick: ->
-      new_time = SynchronizedTime.getTime()
+      newTime = SynchronizedTime.getTime()
 
       fn(this) for fn in @after_fns
       @after_fns = []
 
       #segments = @move_players(elapsed_time, new_time)
 
-      if Game.use_collisions
-        for player in @players
-          collisions = @walls.add_point(player, player.currentPosition())
-          for collision in collisions
-            for listener in @collide_listeners
-              listener.notify(collision[0].player, collision[1].player, collision[2]) if collision != false
-          console.log "Collisions: ", collisions
+      for player, i in @players
+        console.log "Index: ", i
+        segment = new walls.WallSegment(@walls.most_recent_walls[i].endpoint, player.currentPosition(newTime))
+        @emit_collisions(segment)
 
       for listener in @canvas_listeners
         listener.notify('Tick', (p.currentPosition() for p in @players))

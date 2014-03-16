@@ -81,7 +81,7 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
 
 
 
-    xdescribe "collision behavior", ->
+    describe "collision behavior", ->
       listener = null
 
       beforeEach(() ->
@@ -92,7 +92,7 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
        
 
       it "notifies the listeners about a head-collision for the current player", ->
-
+        game.registerCollisionInterest(1)
         SynchronizedTime.setTimeForTesting(timeToTraverse * .375)
         game.timer_tick()
         game.handle_input(0, KEY_EAST)
@@ -102,6 +102,7 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
         expect(listener.notify).toHaveBeenCalledWith(game.player1, game.player3, new Point(Game.WITDTH/2, Game.HEIGHT/2))
 
       it "notifies the listeners about a one-way collision for the current player", ->
+        game.registerCollisionInterest(3)
         SynchronizedTime.setTimeForTesting(timeToTraverse * .375)
         game.timer_tick()
         game.handle_input(0, KEY_EAST)
@@ -109,16 +110,18 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
         game.handle_input(2, KEY_WEST)
         SynchronizedTime.setTimeForTesting(timeToTraverse * .63)
         game.timer_tick()
+	      # Player 3 has collided into player 1
         expect(listener.notify).toHaveBeenCalledWith(game.player3, game.player1, new Point(Game.WIDTH * .63, Game.HEIGHT/2))
 
       it "notifies the listeners about a collision coming from another player", ->
+        game.registerCollisionInterest(0)
         SynchronizedTime.setTimeForTesting(timeToTraverse * .375)
         game.timer_tick()
         game.handle_input(0, KEY_EAST)
         game.handle_input(2, KEY_WEST)
         SynchronizedTime.setTimeForTesting(timeToTraverse * .55)
-        game.handleCollisionMessage(2, 0)
+        # Message from network that Player1 collided with Player3
+        game.handleCollisionMessage(1, 3)
         game.timer_tick()
-        expect(listener.notify).toHaveBeenCalledWith(game.player0, game.player1, new Point(Game.WITDTH/2, Game.HEIGHT/2))
-
+        expect(listener.notify).toHaveBeenCalledWith(game.player1, game.player3, new Point(Game.WITDTH/2, Game.HEIGHT/2))
 )

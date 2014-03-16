@@ -12,41 +12,34 @@ define(['fabric', 'point'], (fabric, Point) ->
   exports = {}
 
   class WallSegment
-    constructor: (@endpoint1, @endpoint2, @player) ->
-      if @endpoint1.x == @endpoint2.x
+    constructor: (@startpoint, @endpoint, @player) ->
+      if @startpoint.x == @endpoint.x
         @orientation = VERTICAL
       else
         @orientation = HORIZONTAL
 
     extend: (segment) ->
-      if segment.orientation == VERTICAL
-        if segment.endpoint1.y < @endpoint1.y
-          @endpoint1 = segment.endpoint1
-        else
-          @endpoint2 = segment.endpoint2
-      else
-        if segment.endpoint1.x < @endpoint1.x
-          @endpoint1 = segment.endpoint1
-        else
-          @endpoint2 = segment.endpoint2
+      if segment.startpoint != @endpoint
+        throw Error('IllegalExtendException')
+      @endpoint = segment.endpoint
 
     truncate: (segment) ->
+      if segment.orientation == @orientation
+        throw Error('SameOrientationTruncateException')
       if segment.orientation == VERTICAL
-        @endpoint2.x = segment.endpoint1.x
+        @endpoint.x = segment.startpoint.x
       else
-        @endpoint2.y = segment.endpoint1.y
+        @endpoint.y = segment.startpoint.y
 
     intersection_with: (segment) ->
-      intersection = fabric.Intersection.intersectLineLine(@endpoint1.pos, @endpoint2.pos, segment.endpoint1.pos, segment.endpoint2.pos)
+      intersection = fabric.Intersection.intersectLineLine(@startpoint.pos, @endpoint.pos, segment.startpoint.pos, segment.endpoint.pos)
       return [this, segment, intersection.points[0]] if intersection.status == "Intersection" || intersection.status == "Coincident"
       return false
 
   class Walls
     constructor: (@Game) ->
       @walls = { 'v': [], 'h': [] }
-      @most_recent_walls = [null] * @Game.players.length
-
-    add_point: -> []
+      @most_recent_walls = [{}, {}, {}, {}]
 
     update_wall: (player_no, segment) ->
       last_wall = @most_recent_walls[player_no]
@@ -72,30 +65,32 @@ define(['fabric', 'point'], (fabric, Point) ->
       collisions
 
 
-
+    ###
+    Don't use
     add_or_extend_wall: (player, position) ->
       @walls[player.name] ||= {0: [], 1: [], 2: [], 3: []}
       console.log "Walls: ", @walls[player.name][position.direction] if player.name == "Player0"
       for wall in @walls[player.name][position.direction]
         if position.direction == Point.NORTH or position.direction == Point.SOUTH
-          if wall.endpoint1.x == position.x
-            if wall.endpoint1.y < position.y
-              wall.endpoint2.y = position.y
+          if wall.startpoint.x == position.x
+            if wall.startpoint.y < position.y
+              wall.endpoint.y = position.y
             else
-              wall.endpoint1.y = position.y
+              wall.startpoint.y = position.y
             return
         else
-          if wall.endpoint1.y == position.y
-            if wall.endpoint1.x < position.x
-              wall.endpoint2.x = position.x
+          if wall.startpoint.y == position.y
+            if wall.startpoint.x < position.x
+              wall.endpoint.x = position.x
             else
-              wall.endpoint1.x = position.x
+              wall.startpoint.x = position.x
             return
       console.log "New wall!"
       @walls[player.name][position.direction].push(new Wall(position, position))
 
     is_collision: (segment) ->
 
+   ###
   exports.Walls = Walls
   exports.WallSegment = WallSegment
 
