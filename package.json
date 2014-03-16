@@ -5,7 +5,8 @@
       "jasmine-node": ">=0",
       "fabric": ">=0",
       "coffee-script": ">=0",
-      "express": ">=0"
+      "express": ">=0",
+      "fabric": ">=0"
     }
 }
 
