@@ -19,7 +19,7 @@ define(['fabric', 'synchronizedtime', 'point'], (fabric, SynchronizedTime, Point
 
   class Player
 
-    constructor: (@name, pos, @game) ->
+    constructor: (@name, pos, @game, @number) ->
       @positions = [pos]
 
     lastPos: ->

@@ -41,5 +41,8 @@ define([], ->
     add: (point) ->
       new Point(@x + point.x, @y + point.y)
 
+    equals: (point) ->
+      @x == point.x and @y == point.y
+
   Point
 )

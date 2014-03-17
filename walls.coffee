@@ -19,7 +19,7 @@ define(['fabric', 'point'], (fabric, Point) ->
         @orientation = HORIZONTAL
 
     extend: (segment) ->
-      if segment.startpoint != @endpoint
+      if not segment.startpoint.eq(@endpoint)
         throw Error('IllegalExtendException')
       @endpoint = segment.endpoint
 
@@ -32,14 +32,14 @@ define(['fabric', 'point'], (fabric, Point) ->
         @endpoint.y = segment.startpoint.y
 
     intersection_with: (segment) ->
-      intersection = fabric.Intersection.intersectLineLine(@startpoint.pos, @endpoint.pos, segment.startpoint.pos, segment.endpoint.pos)
+      intersection = fabric.Intersection.intersectLineLine(@startpoint, @endpoint, segment.startpoint, segment.endpoint)
       return [this, segment, intersection.points[0]] if intersection.status == "Intersection" || intersection.status == "Coincident"
       return false
 
   class Walls
     constructor: (@Game) ->
       @walls = { 'v': [], 'h': [] }
-      @most_recent_walls = [{}, {}, {}, {}]
+      @most_recent_walls = [null, null, null, null]
 
     update_wall: (player_no, segment) ->
       last_wall = @most_recent_walls[player_no]
@@ -61,7 +61,7 @@ define(['fabric', 'point'], (fabric, Point) ->
       walls_to_search.splice(walls_to_search.indexOf(segment), 1)
       for wall in walls_to_search
         intersect = segment.intersection_with(wall)
-        collisions.push(intersect) if intersect != null
+        collisions.push(intersect) if intersect? and intersect != false
       collisions
 
 

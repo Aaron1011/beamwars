@@ -23,7 +23,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
     @VELOCITY = 100
 
-    @use_collisions = false
+    @use_collisions = true
 
     @KEY_WEST = 37
     @KEY_NORTH = 38
@@ -39,13 +39,14 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       @browser = false
       @after_fns = []
       @walls = new walls.Walls(this)
+      @doNotify = {}
 
 
     start: ->
-      @player0 = new Player("Player0", new Position([Game.WIDTH/2, 0], Point.SOUTH, 0), this)
-      @player1 = new Player("Player1", new Position([Game.WIDTH, Game.HEIGHT/2], Point.WEST, 0),  this)
-      @player2 = new Player("Player2", new Position([Game.WIDTH/2, Game.HEIGHT], Point.NORTH, 0),  this)
-      @player3 = new Player("Player3", new Position([0, Game.HEIGHT/2], Point.EAST, 0),  this)
+      @player0 = new Player("Player0", new Position([Game.WIDTH/2, 0], Point.SOUTH, 0), this, 0)
+      @player1 = new Player("Player1", new Position([Game.WIDTH, Game.HEIGHT/2], Point.WEST, 0),  this, 1)
+      @player2 = new Player("Player2", new Position([Game.WIDTH/2, Game.HEIGHT], Point.NORTH, 0),  this, 2)
+      @player3 = new Player("Player3", new Position([0, Game.HEIGHT/2], Point.EAST, 0),  this, 3)
 
       @players = [@player0, @player1, @player2, @player3]
 
@@ -89,7 +90,11 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
 
 
-    handle_input: (player_index, key, time = SynchronizedTime.getTime()) ->
+    handle_input: (player_index, key, time = null) ->
+      oldTime = true
+      if not time?
+        time = SynchronizedTime.getTime()
+        oldTime = false
       lastpos = @players[player_index].currentPosition(time)
       player = @players[player_index]
       if player.lastPos().time > time
@@ -104,8 +109,10 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
         when 40
           player.positions.push(new Position([lastpos.x, lastpos.y], Point.SOUTH, time))
 
-
-      segment = new walls.WallSegment(lastpos, @players[player_index].currentPosition(time))
+      newTime = time
+      if oldTime
+        newTime = SynchronizedTime.getTime()
+      segment = new walls.WallSegment(lastpos, @players[player_index].currentPosition(newTime), player)
       @walls.update_wall(player_index, segment)
       @emit_collisions(segment)
 
@@ -113,14 +120,15 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
         listener.notify('Turn', [player_index, player.lastPos(), player.currentPosition(time)])
 
 
-    emit_collisions: (segment) ->
+    emit_collisions: (segments) ->
       if Game.use_collisions
-        for player, i in @players
-          @walls.update_wall(i, segment)
+        for segment in segments
           collisions = @walls.detect_collisions(segment)
           for collision in collisions
             for listener in @collide_listeners
-              listener.notify(collision[0].player, collision[1].player, collision[2]) if collision != false
+              console.log "Collision: ", collision
+              if @doNotify[collision[0].player]
+                listener.notify(collision[0].player, collision[1].player, collision[2]) if collision != false
           console.log "Collisions: ", collisions
 
 
@@ -132,17 +140,25 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
       #segments = @move_players(elapsed_time, new_time)
 
+      segments = []
       for player, i in @players
         console.log "Index: ", i
-        segment = new walls.WallSegment(@walls.most_recent_walls[i].endpoint, player.currentPosition(newTime))
-        @emit_collisions(segment)
+        wall = @walls.most_recent_walls[i]
+        if not wall?
+          endpoint = player.currentPosition(0)
+        else
+          endpoint = wall.endpoint
+        segment = new walls.WallSegment(endpoint, player.currentPosition(newTime), player)
+        @walls.update_wall(i, segment)
+        segments.push(segment)
+      @emit_collisions(segments)
 
       for listener in @canvas_listeners
         listener.notify('Tick', (p.currentPosition() for p in @players))
 
       #@handle_input(new_time)
 
-      @old_time = new_time
+      #@old_time = new_time
 
     addListener: (listener) ->
       @collide_listeners.push(listener)
@@ -152,6 +168,9 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
     runAfterTick: (fn) ->
       @after_fns.push(fn)
+
+    registerCollisionInterest: (playerNumber) ->
+      @doNotify[@players[playerNumber]] = true
 
   Game
 )
