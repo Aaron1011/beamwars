@@ -132,33 +132,38 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
           console.log "Collisions: ", collisions
 
 
-    timer_tick: ->
-      newTime = SynchronizedTime.getTime()
+    timer_tick: (svgOutputFile = null) ->
+      new_time = SynchronizedTime.getTime()
 
       fn(this) for fn in @after_fns
       @after_fns = []
 
       #segments = @move_players(elapsed_time, new_time)
+      if svgOutputFile?
+        picture = new GamePicture(Game.WIDTH, Game.HEIGHT)
+        picture.addSegment((w for w in @walls.allWalls()))
 
-      segments = []
-      for player, i in @players
-        console.log "Index: ", i
-        wall = @walls.most_recent_walls[i]
-        if not wall?
-          endpoint = player.currentPosition(0)
-        else
-          endpoint = wall.endpoint
-        segment = new walls.WallSegment(endpoint, player.currentPosition(newTime), player)
-        @walls.update_wall(i, segment)
-        segments.push(segment)
-      @emit_collisions(segments)
+      for player in @players
+        segment = new walls.WallSegment(player.lastPoint, player.currentPosition(), player)
+        picture.addSegment(segment, true) if svgOutputFile?
+        
+        @walls.update_wall(@players.indexOf(player), segment)
 
-      for listener in @canvas_listeners
-        listener.notify('Tick', (p.currentPosition() for p in @players))
+        if Game.use_collisions
+          collisions = @walls.detect_collisions(segment)
+          console.log "Collisions: ", collisions
+          for collision in collisions
+            for listener in @collide_listeners
+              listener.notify(collision[0].player, collision[1].player, collision[2]) if collision != false
 
-      #@handle_input(new_time)
+            for listener in @canvas_listeners
+              listener.notify('Tick', (p.currentPosition() for p in @players))
 
-      #@old_time = new_time
+            #@handle_input(new_time)
+
+            #@old_time = new_time
+
+            picture.output(svgOutputFile) if svgOutputFile?
 
     addListener: (listener) ->
       @collide_listeners.push(listener)

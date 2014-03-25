@@ -21,6 +21,7 @@ define(['fabric', 'synchronizedtime', 'point'], (fabric, SynchronizedTime, Point
 
     constructor: (@name, pos, @game, @number) ->
       @positions = [pos]
+      @lastPoint = new Point(pos.x, pos.y)
 
     lastPos: ->
       @positions[@positions.length - 1]
@@ -29,7 +30,7 @@ define(['fabric', 'synchronizedtime', 'point'], (fabric, SynchronizedTime, Point
     currentPosition: (time=SynchronizedTime.getTime()) ->
       lastpos = @positions[@positions.length - 1]
       distance = (time - lastpos.time) * @game.constructor.VELOCITY
-      lastpos.pos.add(Point.unit_vector(lastpos.direction).multiply(distance))
+      @lastPoint = lastpos.pos.add(Point.unit_vector(lastpos.direction).multiply(distance))
 
 
     resetLine: ->

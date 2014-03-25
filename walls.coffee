@@ -32,8 +32,11 @@ define(['fabric', 'point'], (fabric, Point) ->
         @endpoint.y = segment.startpoint.y
 
     intersection_with: (segment) ->
+      if segment.orientation == @orientation
+        throw new Error('The segments must have different orientations')
+
       intersection = fabric.Intersection.intersectLineLine(@startpoint, @endpoint, segment.startpoint, segment.endpoint)
-      return [this, segment, intersection.points[0]] if intersection.status == "Intersection" || intersection.status == "Coincident"
+      return [this, segment, intersection.points[0]] if intersection.status == "Intersection"
       return false
 
   class Walls
@@ -56,9 +59,8 @@ define(['fabric', 'point'], (fabric, Point) ->
       if segment.orientation == HORIZONTAL
         orientation_to_search = VERTICAL
       else
-        orientation_to_search = VERTICAL
-      walls_to_search = @walls[orientation_to_search].slice()
-      walls_to_search.splice(walls_to_search.indexOf(segment), 1)
+        orientation_to_search = HORIZONTAL
+      walls_to_search = @walls[orientation_to_search]
       for wall in walls_to_search
         intersect = segment.intersection_with(wall)
         collisions.push(intersect) if intersect? and intersect != false
@@ -91,6 +93,11 @@ define(['fabric', 'point'], (fabric, Point) ->
     is_collision: (segment) ->
 
    ###
+
+
+    allWalls: ->
+      @walls['v'].concat(@walls['h'])
+
   exports.Walls = Walls
   exports.WallSegment = WallSegment
 

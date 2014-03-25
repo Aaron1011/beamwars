@@ -20,6 +20,8 @@ requirejs.config({
 require ['lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'position', 'socketio', 'jquery', 'lib/fabric'], (doc, Canvas, Game, SynchronizedTime, Position, io, $) -> # Fabric is deliberately not set as an argument
   socket = io.connect('http://localhost')
 
+  currentPlayer = 0
+
 
 
   console.log "Fabric: ", fabric
@@ -58,6 +60,9 @@ require ['lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'position',
     game_canvas.registerCollision(parseInt($("#collide_player").val()))
   )
 
+  socket.on 'id', (id) ->
+    currentPlayer = id
+
   socket.on 'turn', (data) ->
     console.log "Turn: ", data
     game.handle_input(data.player, data.direction, data.time)
@@ -69,12 +74,13 @@ require ['lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'position',
     $("#time").val(time)
 
 
+
   $(document).keydown (e) ->
     console.log "Key!"
     if Game.KEY_WEST <= e.which <= Game.KEY_SOUTH
       console.log "Yup!"
       time = SynchronizedTime.getTime()
-      game.handle_input(0, e.which, time)
+      game.handle_input(currentPlayer, e.which, time)
       socket.emit('turn', {player: 0, direction: e.which, time: time})
   
   ###
