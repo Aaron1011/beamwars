@@ -40,17 +40,9 @@ requirejs ['game', 'synchronizedtime', 'http'], (Game, SynchronizedTime, http) -
 
   server.listen(8000)
 
-  nextId = ->
-    id = 0
-    while (id in io.sockets.clients())
-
-
-
-
   io.sockets.on 'connection', (socket) ->
-    id = nextId()
-    socket.set 'id', id, ->
-      socket.emit 'id', id
+    #socket.set 'id', id, ->
+    #  socket.emit 'id', id
 
     socket.on 'time', (time) ->
       console.log "Time: ", time
