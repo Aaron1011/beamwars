@@ -6,7 +6,7 @@ var rename = require('gulp-rename');
 var browserify = require('gulp-browserify');
 
 gulp.task('scripts', function() {
-    gulp.src('src/coffee/app.coffee', { read: false })
+    gulp.src('src/index.coffee', { read: false })
        .pipe(browserify({
                 transform: ['coffeeify'],
                 extensions: ['.coffee']
@@ -14,13 +14,13 @@ gulp.task('scripts', function() {
     .pipe(rename('bundle.js'))
 })
 
-//gulp.task('specs', function() {  
+gulp.task('specs', function() {  
 //    gulp.src(['spec/**/*.coffee'])
 //        .pipe(coffee({bare: true}).on('error', gutil.log))
-//})
+})
 
 gulp.task('default', function() {  
-    gulp.watch('src/**', function(event) {
+    gulp.watch('src/**/*.coffee', function(event) {
         gulp.run('scripts');
     })
 

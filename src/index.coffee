@@ -1,14 +1,14 @@
-Canvas = require('./canvas')
+Canvas = require('./game_canvas')
 Game = require('./game')
 SynchronizedTime = require('./synchronizedtime')
 Position = require('./position')
-io = require('socketio')
+io = require('socket.io')
 $ = require('../lib/jquery')
-fabric = require('../lib/fabric')
+fabric = require('fabric')
 
 socket = io.connect('http://localhost')
 
-currentPlayer = 0
+currentPlayer = 1
 
 
 
