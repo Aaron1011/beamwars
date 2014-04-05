@@ -1,4 +1,4 @@
-define ['fabric', 'underscore'], (fabric, _) ->
+define ['game', 'fabric', 'underscore'], (Game, fabric, _) ->
 
   fabric = fabric.fabric if fabric.fabric?
 
@@ -9,7 +9,7 @@ define ['fabric', 'underscore'], (fabric, _) ->
         @canvas = new fabric.Canvas(canvasId)
       else
         console.log "Node!"
-        @canvas = fabric.createCanvasForNode(800, 800)
+        @canvas = fabric.createCanvasForNode(Game.WIDTH, Game.HEIGHT)
       options = {strokeWidth: 5, fill: 'none'}
       @lines = [new fabric.Polyline([{'x': @canvas.getWidth() / 2, 'y': 0}], _.extend(options, {'stroke': 'green'}), true),
         new fabric.Polyline([{'x': @canvas.getWidth(), y: @canvas.getHeight() / 2}], _.extend(options, {'stroke': 'blue'}), true),
