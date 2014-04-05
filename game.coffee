@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls', 'point'], (Position, Player, SynchronizedTime, SinglePlayerListener, walls, Point) ->
+define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls', 'point', 'gamepicture'], (Position, Player, SynchronizedTime, SinglePlayerListener, walls, Point, GamePicture) ->
 
   class Game
 
