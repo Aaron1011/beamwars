@@ -2,6 +2,7 @@ requirejs = require("requirejs")
 express = require("express")
 
 requirejs.config({
+    baseUrl: './src',
     nodeRequire: require
     shim: {
       'socketio': {

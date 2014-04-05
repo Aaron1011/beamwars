@@ -9,15 +9,15 @@ requirejs.config({
   }
   paths: {
     fabric: [
-      'lib/fabric']
-    jquery: 'lib/jquery'
+      '../lib/fabric']
+    jquery: '../lib/jquery'
 
     socketio: '/socket.io/socket.io',
-    underscore: 'lib/underscore'
+    underscore: '../lib/underscore'
   }
 })
 
-require ['lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'position', 'socketio', 'jquery', 'lib/fabric'], (doc, Canvas, Game, SynchronizedTime, Position, io, $) -> # Fabric is deliberately not set as an argument
+require ['../lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'position', 'socketio', 'jquery', '../lib/fabric'], (doc, Canvas, Game, SynchronizedTime, Position, io, $) -> # Fabric is deliberately not set as an argument
   socket = io.connect('http://localhost')
 
   currentPlayer = 0
