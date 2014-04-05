@@ -20,22 +20,26 @@ requirejs.config({
   }
 })
 
-requirejs ['game', 'synchronizedtime', 'gamepicture'], (Game, SynchronizedTime, GamePicture) ->
+requirejs ['game', 'synchronizedtime', 'gamepicture', 'game_canvas'], (Game, SynchronizedTime, GamePicture, GameCanvas) ->
   fs = require('fs')
-  game = new Game()
   config = JSON.parse(fs.readFileSync(process.argv[2]))
-  game.start()
-  i = 0
   console.log "Config: ", config
   for player, moves of config
+    i = 0
+    game = new Game()
+    game.addCanvasListener(new GameCanvas())
+    game.start()
+
     console.log "Player:", player, "Moves:", moves
     for move in moves
       if not (move instanceof Array)
         SynchronizedTime.setTimeForTesting(move)
         console.log "Number!"
       else
-        SynchronizedTime.setTimeForTesting(move[0])
+        if move[1] instanceof Array
+          SynchronizedTime.setTimeForTesting(move[0])
+          move = move[1]
         console.log "Move: ", move
-        game.handle_input(move...)
-        game.timer_tick(i + '.svg')
+        game.handle_input((move)...)
+      game.timer_tick(player + '_' + i + '.svg')
       i += 1

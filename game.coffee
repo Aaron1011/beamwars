@@ -21,9 +21,9 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
     @WIDTH:  800
     @HEIGHT:  800
 
-    @VELOCITY = 100
+    @VELOCITY = 800
 
-    @use_collisions = true
+    @use_collisions = false
 
     @KEY_WEST = 37
     @KEY_NORTH = 38
@@ -139,15 +139,12 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       @after_fns = []
 
       #segments = @move_players(elapsed_time, new_time)
-      if svgOutputFile?
-        picture = new GamePicture(Game.WIDTH, Game.HEIGHT)
-        picture.addSegment((w for w in @walls.allWalls()))
 
       for player in @players
         segment = new walls.WallSegment(player.lastPoint, player.currentPosition(), player)
-        picture.addSegment(segment, true) if svgOutputFile?
+        #picture.addSegment(segment, true) if svgOutputFile?
         
-        @walls.update_wall(@players.indexOf(player), segment)
+	#@walls.update_wall(@players.indexOf(player), segment)
 
         if Game.use_collisions
           collisions = @walls.detect_collisions(segment)
@@ -156,14 +153,23 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
             for listener in @collide_listeners
               listener.notify(collision[0].player, collision[1].player, collision[2]) if collision != false
 
-            for listener in @canvas_listeners
-              listener.notify('Tick', (p.currentPosition() for p in @players))
+      for listener in @canvas_listeners
+        listener.notify('Tick', (p.currentPosition() for p in @players))
 
             #@handle_input(new_time)
 
             #@old_time = new_time
+      console.log "Output: ", svgOutputFile
+      @output(svgOutputFile) if svgOutputFile?
 
-            picture.output(svgOutputFile) if svgOutputFile?
+    output: (svgOutputFile) ->
+      console.log "Output 2!"
+      picture = @canvas_listeners[0].output()
+      fs = require('fs')
+      fs.writeFileSync(svgOutputFile, picture)
+      console.log "Output 3!"
+
+ 
 
     addListener: (listener) ->
       @collide_listeners.push(listener)

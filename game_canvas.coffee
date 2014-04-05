@@ -4,8 +4,12 @@ define ['fabric', 'underscore'], (fabric, _) ->
 
   class GameCanvas
 
-    constructor: (canvasId) ->
-      @canvas = new fabric.Canvas(canvasId)
+    constructor: (canvasId=null) ->
+      if canvasId?
+        @canvas = new fabric.Canvas(canvasId)
+      else
+        console.log "Node!"
+        @canvas = fabric.createCanvasForNode(800, 800)
       options = {strokeWidth: 5, fill: 'none'}
       @lines = [new fabric.Polyline([{'x': @canvas.getWidth() / 2, 'y': 0}], _.extend(options, {'stroke': 'green'}), true),
         new fabric.Polyline([{'x': @canvas.getWidth(), y: @canvas.getHeight() / 2}], _.extend(options, {'stroke': 'blue'}), true),
@@ -21,7 +25,10 @@ define ['fabric', 'underscore'], (fabric, _) ->
         line.points.pop()
         line.points.push(positions[i])
       @canvas.renderAll()
-     
+
+    output: ->
+      @canvas.toSVG()
+
     turn: (playerIndex, turnPos, currentPos) ->
       console.log "Turn!"
       console.log playerIndex
