@@ -1,6 +1,7 @@
 requirejs = require('requirejs')
 
 requirejs.config({
+  baseUrl: './src'
   nodeRequire: require,
   shim: {
     'socketio': {
@@ -16,7 +17,7 @@ requirejs.config({
     #jquery: 'lib/jquery'
 
     socketio: '/socket.io/socket.io',
-    underscore: 'lib/underscore'
+    underscore: '../lib/underscore'
   }
 })
 
