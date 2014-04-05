@@ -20,7 +20,7 @@ requirejs.config({
   }
 })
 
-requirejs ['game', 'synchronizedtime', 'gamepicture', 'game_canvas'], (Game, SynchronizedTime, GamePicture, GameCanvas) ->
+requirejs ['game', 'synchronizedtime', 'game_canvas'], (Game, SynchronizedTime, GameCanvas) ->
   fs = require('fs')
   config = JSON.parse(fs.readFileSync(process.argv[2]))
   console.log "Config: ", config

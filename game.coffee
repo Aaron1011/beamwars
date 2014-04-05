@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls', 'point', 'gamepicture'], (Position, Player, SynchronizedTime, SinglePlayerListener, walls, Point, GamePicture) ->
+define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls', 'point'], (Position, Player, SynchronizedTime, SinglePlayerListener, walls, Point) ->
 
   class Game
 
@@ -91,8 +91,8 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
 
     handle_input: (player_index, key, time = null) ->
-      oldTime = true
-      if not time?
+      oldTime = true # If time was passed
+      if not time? # If time is null
         time = SynchronizedTime.getTime()
         oldTime = false
       lastpos = @players[player_index].currentPosition(time)
@@ -113,6 +113,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       if oldTime
         newTime = SynchronizedTime.getTime()
       segment = new walls.WallSegment(lastpos, @players[player_index].currentPosition(newTime), player)
+      player.lastPoint = player.currentPosition(newTime)
       @walls.update_wall(player_index, segment)
       @emit_collisions(segment)
 
@@ -141,10 +142,14 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       #segments = @move_players(elapsed_time, new_time)
 
       for player in @players
+        console.log "Name: ", player.name
+        console.log "Lastpoint: ", player.lastPoint
         segment = new walls.WallSegment(player.lastPoint, player.currentPosition(), player)
         #picture.addSegment(segment, true) if svgOutputFile?
         
-	#@walls.update_wall(@players.indexOf(player), segment)
+        @walls.update_wall(@players.indexOf(player), segment)
+
+        player.lastPoint = player.currentPosition() 
 
         if Game.use_collisions
           collisions = @walls.detect_collisions(segment)
