@@ -24,7 +24,6 @@ requirejs.config({
 requirejs ['game', 'synchronizedtime', 'game_canvas'], (Game, SynchronizedTime, GameCanvas) ->
   fs = require('fs')
   config = JSON.parse(fs.readFileSync(process.argv[2]))
-  console.log "Config: ", config
 
   table = ''
   tableHeader = '<table><tr><td></td>'
@@ -46,16 +45,13 @@ requirejs ['game', 'synchronizedtime', 'game_canvas'], (Game, SynchronizedTime, 
     game.addCanvasListener(new GameCanvas())
     game.start()
 
-    console.log "Player:", player, "Moves:", moves
     for move in moves
       if not (move instanceof Array)
         SynchronizedTime.setTimeForTesting(move)
-        console.log "Number!"
       else
         if move[1] instanceof Array
           SynchronizedTime.setTimeForTesting(move[0])
           move = move[1]
-        console.log "Move: ", move
         game.handle_input((move)...)
       filename = player + '_' + i + '.svg'
       game.timer_tick(filename)

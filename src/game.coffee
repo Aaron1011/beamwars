@@ -142,8 +142,6 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       #segments = @move_players(elapsed_time, new_time)
 
       for player in @players
-        console.log "Name: ", player.name
-        console.log "Lastpoint: ", player.lastPoint
         segment = new walls.WallSegment(player.lastPoint, player.currentPosition(), player)
         #picture.addSegment(segment, true) if svgOutputFile?
         
@@ -164,17 +162,13 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
             #@handle_input(new_time)
 
             #@old_time = new_time
-      console.log "Output: ", svgOutputFile
       @output(svgOutputFile) if svgOutputFile?
 
     output: (svgOutputFile) ->
-      console.log "Output 2!"
       picture = @canvas_listeners[0].output()
       fs = require('fs')
       fs.writeFileSync(svgOutputFile, picture)
-      console.log "Output 3!"
 
- 
 
     addListener: (listener) ->
       @collide_listeners.push(listener)

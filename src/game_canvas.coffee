@@ -8,7 +8,6 @@ define ['game', 'fabric', 'underscore'], (Game, fabric, _) ->
       if canvasId?
         @canvas = new fabric.Canvas(canvasId)
       else
-        console.log "Node!"
         @canvas = fabric.createCanvasForNode(Game.WIDTH, Game.HEIGHT)
       options = {strokeWidth: 5, fill: 'none'}
       @lines = [new fabric.Polyline([{'x': @canvas.getWidth() / 2, 'y': 0}], _.extend(options, {'stroke': 'green'}), true),
@@ -30,8 +29,6 @@ define ['game', 'fabric', 'underscore'], (Game, fabric, _) ->
       @canvas.toSVG()
 
     turn: (playerIndex, turnPos, currentPos) ->
-      console.log "Turn!"
-      console.log playerIndex
       line = @lines[playerIndex]
       line.points.pop()
       line.points.push(turnPos)
