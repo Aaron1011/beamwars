@@ -1,5 +1,4 @@
 requirejs.config({
-    #baseUrl: 'beamwars/',
     #paths: {
     #  'paper': 'lib/paper'
     #}
@@ -10,7 +9,7 @@ requirejs.config({
     #}
 })
 
-define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, SynchronizedTime, Point) ->
+define(['position', 'game', 'synchronizedtime', 'point', '../lib/underscore'], (Position, Game, SynchronizedTime, Point, _) ->
   describe "Game", ->
     game = null
     KEY_WEST = 37
@@ -108,10 +107,10 @@ define(['position', 'game', 'synchronizedtime', 'point'], (Position, Game, Synch
         game.handle_input(0, KEY_EAST)
         game.handle_input(1, KEY_SOUTH)
         game.handle_input(2, KEY_WEST)
-        SynchronizedTime.setTimeForTesting(timeToTraverse * .63)
+        SynchronizedTime.setTimeForTesting(timeToTraverse * .65)
         game.timer_tick()
 	      # Player 3 has collided into player 1
-        expect(listener.notify).toHaveBeenCalledWith(game.player3, game.player1, new Point(Game.WIDTH * .63, Game.HEIGHT/2))
+        expect(listener.notify).toHaveBeenCalledWith(3, 1, new Point(Game.WIDTH * .625, Game.HEIGHT/2))
 
       it "notifies the listeners about a collision coming from another player", ->
         game.registerCollisionInterest(0)

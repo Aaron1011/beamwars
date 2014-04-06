@@ -61,7 +61,7 @@ define(['fabric', 'point'], (fabric, Point) ->
       else
         orientation_to_search = HORIZONTAL
       walls_to_search = @walls[orientation_to_search]
-      for wall in walls_to_search
+      for wall in (w for w in walls_to_search when w.player != segment.player)
         intersect = segment.intersection_with(wall)
         collisions.push(intersect) if intersect? and intersect != false
       collisions

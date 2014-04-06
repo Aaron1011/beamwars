@@ -14,7 +14,8 @@ requirejs.config({
 
     socketio: '/socket.io/socket.io',
     underscore: '../lib/underscore'
-  }
+  },
+  waitSeconds: 12
 })
 
 require ['../lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'position', 'socketio', 'jquery', '../lib/fabric'], (doc, Canvas, Game, SynchronizedTime, Position, io, $) -> # Fabric is deliberately not set as an argument

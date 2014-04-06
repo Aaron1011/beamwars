@@ -1,9 +1,10 @@
 require.config({
+    baseUrl: './src'
     paths: {
-        jquery: 'lib/jquery',
-        'jasmine': 'lib/jasmine-1.3.1/jasmine',
-        'jasmine-html': 'lib/jasmine-1.3.1/jasmine-html',
-        fabric: 'lib/fabric'
+        jquery: '../lib/jquery',
+        'jasmine': '../lib/jasmine-1.3.1/jasmine',
+        'jasmine-html': '../lib/jasmine-1.3.1/jasmine-html',
+        fabric: '../lib/fabric'
     },
 
     shim: {
@@ -30,8 +31,8 @@ require(['jquery', 'jasmine-html'], ($, jasmine) ->
 
     specs = []
 
-    specs.push('spec/gamespec')
-    specs.push('spec/playerspec')
+    specs.push('../spec/gamespec')
+    specs.push('../spec/playerspec')
 
 
     $(()->

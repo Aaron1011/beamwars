@@ -23,7 +23,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
     @VELOCITY = 800
 
-    @use_collisions = false
+    @use_collisions = true
 
     @KEY_WEST = 37
     @KEY_NORTH = 38
@@ -154,7 +154,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
           console.log "Collisions: ", collisions
           for collision in collisions
             for listener in @collide_listeners
-              listener.notify(collision[0].player, collision[1].player, collision[2]) if collision != false
+              listener.notify(@players.indexOf(collision[0].player), @players.indexOf(collision[1].player), collision[2]) if collision != false
 
       for listener in @canvas_listeners
         listener.notify('Tick', (p.currentPosition() for p in @players))
