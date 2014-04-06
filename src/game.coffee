@@ -121,16 +121,17 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
         listener.notify('Turn', [player_index, player.lastPos(), player.currentPosition(time)])
 
 
-    emit_collisions: (segments) ->
+    emit_collisions: (segment) ->
       if Game.use_collisions
-        for segment in segments
-          collisions = @walls.detect_collisions(segment)
-          for collision in collisions
-            for listener in @collide_listeners
-              console.log "Collision: ", collision
-              if @doNotify[collision[0].player]
-                listener.notify(collision[0].player, collision[1].player, collision[2]) if collision != false
-          console.log "Collisions: ", collisions
+        collisions = @walls.detect_collisions(segment)
+        for collision in collisions
+          for listener in @collide_listeners
+            console.log "Collision: ", collision
+            if @doNotify[@players.indexOf(collision[0].player)]
+              console.log "DoNotify: ", @doNotify
+              listener.notify(@players.indexOf(collision[0].player), @players.indexOf(collision[1].player), collision[2]) if collision != false
+
+        console.log "Collisions: ", collisions
 
 
     timer_tick: (svgOutputFile = null) ->
@@ -148,13 +149,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
         @walls.update_wall(@players.indexOf(player), segment)
 
         player.lastPoint = player.currentPosition()
-
-        if Game.use_collisions
-          collisions = @walls.detect_collisions(segment)
-          console.log "Collisions: ", collisions
-          for collision in collisions
-            for listener in @collide_listeners
-              listener.notify(@players.indexOf(collision[0].player), @players.indexOf(collision[1].player), collision[2]) if collision != false
+        @emit_collisions(segment)
 
       for listener in @canvas_listeners
         listener.notify('Tick', (p.currentPosition() for p in @players))
@@ -163,6 +158,10 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
             #@old_time = new_time
       @output(svgOutputFile) if svgOutputFile?
+
+    handleCollisionMessage: (collider, collidee, point) ->
+      for listener in @collide_listeners
+        listener.notify(collider, collidee, point)
 
     output: (svgOutputFile) ->
       picture = @canvas_listeners[0].output()
@@ -180,7 +179,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       @after_fns.push(fn)
 
     registerCollisionInterest: (playerNumber) ->
-      @doNotify[@players[playerNumber]] = true
+      @doNotify[playerNumber] = true
 
   Game
 )

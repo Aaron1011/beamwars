@@ -117,10 +117,11 @@ define(['position', 'game', 'synchronizedtime', 'point', '../lib/underscore'], (
         SynchronizedTime.setTimeForTesting(timeToTraverse * .375)
         game.timer_tick()
         game.handle_input(0, KEY_EAST)
+        game.handle_input(1, KEY_SOUTH)
         game.handle_input(2, KEY_WEST)
-        SynchronizedTime.setTimeForTesting(timeToTraverse * .55)
-        # Message from network that Player1 collided with Player3
-        game.handleCollisionMessage(1, 3)
+        SynchronizedTime.setTimeForTesting(timeToTraverse * .65)
+        # Message from network that Player3 collided with Player1
+        game.handleCollisionMessage(3, 1, new fabric.Point(500, 400))
         game.timer_tick()
-        expect(listener.notify).toHaveBeenCalledWith(game.player1, game.player3, new Point(Game.WITDTH/2, Game.HEIGHT/2))
+        expect(listener.notify).toHaveBeenCalledWith(3, 1, new fabric.Point(Game.WIDTH * .625,  Game.HEIGHT/2))
 )
