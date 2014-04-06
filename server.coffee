@@ -1,5 +1,6 @@
 requirejs = require("requirejs")
 express = require("express")
+http = require("http")
 
 requirejs.config({
     baseUrl: './src',
@@ -24,7 +25,7 @@ requirejs.config({
 
 
 
-requirejs ['game', 'synchronizedtime', 'http'], (Game, SynchronizedTime, http) ->
+requirejs ['game', 'synchronizedtime'], (Game, SynchronizedTime) ->
 
   app = express()
 
