@@ -110,7 +110,7 @@ define(['position', 'game', 'synchronizedtime', 'point', '../lib/underscore'], (
         SynchronizedTime.setTimeForTesting(timeToTraverse * .65)
         game.timer_tick()
 	      # Player 3 has collided into player 1
-        expect(listener.notify).toHaveBeenCalledWith(3, 1, new Point(Game.WIDTH * .625, Game.HEIGHT/2))
+        expect(listener.notify).toHaveBeenCalledWith(3, 1, new fabric.Point(Game.WIDTH * .625, Game.HEIGHT/2))
 
       it "notifies the listeners about a collision coming from another player", ->
         game.registerCollisionInterest(0)
