@@ -147,7 +147,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
         
         @walls.update_wall(@players.indexOf(player), segment)
 
-        player.lastPoint = player.currentPosition() 
+        player.lastPoint = player.currentPosition()
 
         if Game.use_collisions
           collisions = @walls.detect_collisions(segment)

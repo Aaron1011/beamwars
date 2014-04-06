@@ -30,11 +30,8 @@ requirejs ['game', 'synchronizedtime', 'game_canvas'], (Game, SynchronizedTime, 
 
   moves = config[Object.keys(config)[0]]
   for move in moves
-    if move instanceof Array
-      time = move[0]
-    else
-      time = move
-    tableHeader += '<td>' + 'Time ' + time + '</td>'
+    if not (move instanceof Array)
+      tableHeader += '<td>' + 'Time ' + move + '</td>'
   tableHeader += '</tr>'
 
 
@@ -48,14 +45,15 @@ requirejs ['game', 'synchronizedtime', 'game_canvas'], (Game, SynchronizedTime, 
     for move in moves
       if not (move instanceof Array)
         SynchronizedTime.setTimeForTesting(move)
+        filename = player + '_' + i + '.svg'
+        game.timer_tick(filename)
+        table += '<td>' + '<img src=\"' + './' + filename + '\"</img>' + '</td>'
       else
         if move[1] instanceof Array
           SynchronizedTime.setTimeForTesting(move[0])
           move = move[1]
         game.handle_input((move)...)
-      filename = player + '_' + i + '.svg'
-      game.timer_tick(filename)
-      table += '<td>' + '<img src=\"' + './img/' + filename + '\"</img>' + '</td>'
+        game.timer_tick()
       i += 1
     table += '</tr>'
   table += '</table>'
