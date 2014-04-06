@@ -96,9 +96,9 @@ define(['position', 'game', 'synchronizedtime', 'point', '../lib/underscore'], (
         game.timer_tick()
         game.handle_input(0, KEY_EAST)
         game.handle_input(2, KEY_WEST)
-        SynchronizedTime.setTimeForTesting(timeToTraverse * .55)
+        SynchronizedTime.setTimeForTesting(timeToTraverse * .6)
         game.timer_tick()
-        expect(listener.notify).toHaveBeenCalledWith(game.player1, game.player3, new Point(Game.WITDTH/2, Game.HEIGHT/2))
+        expect(listener.notify).toHaveBeenCalledWith(1, 3, (Game.WIDTH * .6) - (Game.WIDTH * .4))
 
       it "notifies the listeners about a one-way collision for the current player", ->
         game.registerCollisionInterest(3)
