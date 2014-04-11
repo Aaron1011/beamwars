@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 
-define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls', 'point'], (Position, Player, SynchronizedTime, SinglePlayerListener, walls, Point) ->
+define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls', 'point', '../lib/underscore'], (Position, Player, SynchronizedTime, SinglePlayerListener, walls, Point, _) ->
 
   class Game
 
@@ -48,7 +48,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       @player2 = new Player("Player2", new Position([Game.WIDTH/2, Game.HEIGHT], Point.NORTH, 0),  this, 2)
       @player3 = new Player("Player3", new Position([0, Game.HEIGHT/2], Point.EAST, 0),  this, 3)
 
-      @players = [@player0, @player1, @player2, @player3]
+      @players = {0: @player0, 1: @player1, 2: @player2, 3: @player3}
 
       if @browser
         @collide_listeners.push(new SinglePlayerListener(this))
@@ -58,7 +58,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
 
     getPositions: ->
-      p.lastPos() for p in @players
+      p.lastPos() for k, p of @players
 
     killPlayer: (player, point) ->
       if @players.indexOf(player) != -1
@@ -66,11 +66,11 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
 
     getCurrentLines: ->
-      p.currentLine() for p in @players
+      p.currentLine() for k, p of @players
 
     move_players: (elapsed_time, new_time) ->
       segments = []
-      for player in @players
+      for i, player in @players
         segments.push(@move_player(player, elapsed_time, new_time))
       segments
 
@@ -97,6 +97,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
         oldTime = false
       lastpos = @players[player_index].currentPosition(time)
       player = @players[player_index]
+      return unless player.alive
       if player.lastPos().time > time
         throw Error('IllegalTurnException')
       switch key
@@ -115,22 +116,27 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       segment = new walls.WallSegment(lastpos, @players[player_index].currentPosition(newTime), player)
       player.lastPoint = player.currentPosition(newTime)
       @walls.update_wall(player_index, segment)
-      @emit_collisions(segment)
+      @emit_collisions([segment])
 
       for listener in @canvas_listeners
         listener.notify('Turn', [player_index, player.lastPos(), player.currentPosition(time)])
 
 
-    emit_collisions: (segment) ->
+    emit_collisions: (segments) ->
+      dead = []
       if Game.use_collisions
-        collisions = @walls.detect_collisions(segment)
-        for collision in collisions
-          for listener in @collide_listeners
-            #console.log "Collision: ", collision
-            if @doNotify[@players.indexOf(collision[0].player)]
-              @killedPlayers.push(@players.indexOf(collision[0].player))
-              #console.log "DoNotify: ", @doNotify
-              listener.notify('Collide', [@players.indexOf(collision[0].player), @players.indexOf(collision[1].player), collision[2]]) if collision != false
+        for segment in segments
+          collisions = @walls.detect_collisions(segment)
+          for collision in collisions
+            for listener in @collide_listeners
+              #console.log "Collision: ", collision
+              if @doNotify[collision[0].player.id]
+                if collision != false
+                  collision[0].player.alive = false
+                  dead.push(collision[0].player)
+                  listener.notify('Collide', [collision[0].player.id, collision[1].player.id, collision[2]]) if collision != false
+
+      @walls.removePlayer(p) for p in dead
         #for p in @killedPlayers
         #  @players.splice(p, 1)
 
@@ -144,19 +150,28 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       fn(this) for fn in @after_fns
       @after_fns = []
 
-      #segments = @move_players(elapsed_time, new_time)
 
-      for player in @players
+
+#segments = @move_players(elapsed_time, new_time)
+
+      players = (p for i, p of @players when p.alive == true)
+      segments = []
+
+      for player in players
         segment = new walls.WallSegment(player.lastPoint, player.currentPosition(), player)
+        segments.push(segment)
         #picture.addSegment(segment, true) if svgOutputFile?
         
-        @walls.update_wall(@players.indexOf(player), segment)
+        @walls.update_wall(player.id, segment)
 
         player.lastPoint = player.currentPosition()
-        @emit_collisions(segment)
+      @emit_collisions(segments)
+
+      positions = {}
+      positions[p.id] = p.currentPosition() for p in players
 
       for listener in @canvas_listeners
-        listener.notify('Tick', (p.currentPosition() for p in @players))
+        listener.notify('Tick', positions)
 
             #@handle_input(new_time)
 

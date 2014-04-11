@@ -20,9 +20,10 @@ define ['game', 'fabric', 'underscore'], (Game, fabric, _) ->
         @canvas.add(line)
 
     timerTick: (positions) ->
-      for line, i in @lines
+      for i, pos of positions
+        line = @lines[i]
         line.points.pop()
-        line.points.push(positions[i])
+        line.points.push(pos)
       @canvas.renderAll()
 
     output: ->
@@ -75,8 +76,8 @@ define ['game', 'fabric', 'underscore'], (Game, fabric, _) ->
       fabric.util.animate(startValue: @_lineLength(playerIndex), endValue: 0, onChange: ((value) =>
         @_shrinkPath(playerIndex, value)
         @canvas.renderAll()),
-      onComplete: =>
-        @lines[playerIndex].stroke = 'white'
+      #onComplete: =>
+      #  @lines[playerIndex].stroke = 'white'
         #@canvas.remove(@lines.splice(playerIndex, 1))
       )
       

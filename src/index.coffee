@@ -93,11 +93,11 @@ require ['../lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'positio
       game.handle_input(currentPlayer, e.which, time)
       socket.emit('turn', {player: 0, direction: e.which, time: time})
   
- ###
+
   setInterval((->
     SynchronizedTime.time += 1/60
     game.timer_tick()
     ),
     (1/60) * 1000
   )
- ###
+ 

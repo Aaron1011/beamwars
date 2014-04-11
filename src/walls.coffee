@@ -69,6 +69,13 @@ define(['fabric', 'point', 'underscore'], (fabric, Point, _) ->
         @most_recent_walls[player_no] = segment
         @walls[segment.orientation].push(segment)
 
+    removePlayer: (player) ->
+      console.log "Removing player!"
+      for wall in @allWalls()
+        if wall.player == player and @walls[wall.orientation].indexOf(wall) != -1
+          console.log "Wall gone!"
+          @walls[wall.orientation].splice(@walls[wall.orientation].indexOf(wall), 1)
+
     detect_collisions: (segment) ->
       collisions = []
       if segment.orientation == HORIZONTAL
@@ -92,7 +99,6 @@ define(['fabric', 'point', 'underscore'], (fabric, Point, _) ->
 
             #console.log "Overlap: ", overlap
             if overlap > 0
-              #console.log "We have overlap!"
               collisions.push([wall, wall2, overlap])
               collisions.push([wall2, wall, overlap])
 
