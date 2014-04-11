@@ -35,6 +35,15 @@ require ['../lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'positio
   game.start()
 
   game.addCanvasListener(game_canvas)
+  game.addListener(game_canvas)
+
+  game.registerCollisionInterest(0)
+  game.registerCollisionInterest(1)
+  game.registerCollisionInterest(2)
+  game.registerCollisionInterest(3)
+
+
+
   
   $("#change").click(->
     time = parseFloat($("#time").val())
@@ -84,11 +93,11 @@ require ['../lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'positio
       game.handle_input(currentPlayer, e.which, time)
       socket.emit('turn', {player: 0, direction: e.which, time: time})
   
-  ###
+ ###
   setInterval((->
     SynchronizedTime.time += 1/60
     game.timer_tick()
     ),
     (1/60) * 1000
   )
-  ###
+ ###

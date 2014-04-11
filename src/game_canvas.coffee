@@ -70,9 +70,14 @@ define ['game', 'fabric', 'underscore'], (Game, fabric, _) ->
 
      
     registerCollision: (playerIndex) ->
-      fabric.util.animate(startValue: @_lineLength(playerIndex), endValue: 0, onChange: (value) =>
+      console.log "Collided in canvas!"
+      @lines[playerIndex].stroke = 'yellow'
+      fabric.util.animate(startValue: @_lineLength(playerIndex), endValue: 0, onChange: ((value) =>
         @_shrinkPath(playerIndex, value)
-        @canvas.renderAll()
+        @canvas.renderAll()),
+      onComplete: =>
+        @lines[playerIndex].stroke = 'white'
+        #@canvas.remove(@lines.splice(playerIndex, 1))
       )
       
 
@@ -88,5 +93,8 @@ define ['game', 'fabric', 'underscore'], (Game, fabric, _) ->
           @timerTick(data)
         when 'Turn'
           @turn(data[0], data[1], data[2])
+        else
+          console.log "Data: ", data
+          @registerCollision(data[0])
 
   GameCanvas

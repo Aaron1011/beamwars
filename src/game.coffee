@@ -21,7 +21,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
     @WIDTH:  800
     @HEIGHT:  800
 
-    @VELOCITY = 800
+    @VELOCITY = 100
 
     @use_collisions = true
 
@@ -126,12 +126,16 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
         collisions = @walls.detect_collisions(segment)
         for collision in collisions
           for listener in @collide_listeners
-            console.log "Collision: ", collision
+            #console.log "Collision: ", collision
             if @doNotify[@players.indexOf(collision[0].player)]
-              console.log "DoNotify: ", @doNotify
-              listener.notify(@players.indexOf(collision[0].player), @players.indexOf(collision[1].player), collision[2]) if collision != false
+              @killedPlayers.push(@players.indexOf(collision[0].player))
+              #console.log "DoNotify: ", @doNotify
+              listener.notify('Collide', [@players.indexOf(collision[0].player), @players.indexOf(collision[1].player), collision[2]]) if collision != false
+        #for p in @killedPlayers
+        #  @players.splice(p, 1)
 
-        console.log "Collisions: ", collisions
+
+        #console.log "Collisions: ", collisions
 
 
     timer_tick: (svgOutputFile = null) ->
