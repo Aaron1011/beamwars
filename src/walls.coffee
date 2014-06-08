@@ -35,12 +35,14 @@ define(['fabric', 'point', 'underscore'], (fabric, Point, _) ->
 
     extend: (segment) ->
       if not segment.startpoint.eq(@endpoint)
-        throw Error('IllegalExtendException')
+        console.error("Illegal extend")
+        #throw Error('IllegalExtendException')
       @endpoint = segment.endpoint
 
     truncate: (segment) ->
       if segment.orientation == @orientation
-        throw Error('SameOrientationTruncateException')
+        console.error("Same orientation truncate")
+        #throw Error('SameOrientationTruncateException')
       if segment.orientation == VERTICAL
         @endpoint.x = segment.startpoint.x
       else
@@ -48,7 +50,8 @@ define(['fabric', 'point', 'underscore'], (fabric, Point, _) ->
 
     intersection_with: (segment) ->
       if segment.orientation == @orientation
-        throw new Error('The segments must have different orientations')
+        console.error "Same orientation intersection check"
+        #throw new Error('The segments must have different orientations')
 
       intersection = fabric.Intersection.intersectLineLine(@startpoint, @endpoint, segment.startpoint, segment.endpoint)
       return [this, segment, intersection.points[0]] if intersection.status == "Intersection"
@@ -63,7 +66,10 @@ define(['fabric', 'point', 'underscore'], (fabric, Point, _) ->
       last_wall = @most_recent_walls[player_no]
       if last_wall? and segment.orientation == last_wall.orientation
         last_wall.extend(segment)
+        console.log "Walls: ", @walls[segment.orientation]
+        @most_recent_walls[player_no] = last_wall
       else
+        console.log "Walls 2: ", @walls[segment.orientation]
         if last_wall?
           last_wall.truncate(segment)
         @most_recent_walls[player_no] = segment
@@ -72,7 +78,7 @@ define(['fabric', 'point', 'underscore'], (fabric, Point, _) ->
     removePlayer: (player) ->
       console.log "Removing player!"
       for wall in @allWalls()
-        if wall.player == player and @walls[wall.orientation].indexOf(wall) != -1
+        if wall.player == player
           console.log "Wall gone!"
           @walls[wall.orientation].splice(@walls[wall.orientation].indexOf(wall), 1)
 
@@ -85,24 +91,19 @@ define(['fabric', 'point', 'underscore'], (fabric, Point, _) ->
 
       walls_to_search = @walls[orientation_to_search]
 
-      searched = []
+      for wall2 in _.without(@most_recent_walls, segment, null)
+        #console.log "Wall2: ", wall2
+        if segment.orientation == wall2.orientation and segment.player != wall2.player
+          if (segment.orientation == HORIZONTAL and segment.startpoint.y == wall2.startpoint.y)
+            overlap = _.min([_.max([segment.startpoint.x, segment.endpoint.x]), _.max([wall2.startpoint.x, wall2.endpoint.x])]) - _.max([_.min([wall2.startpoint.x, wall2.endpoint.x]), _.min([segment.startpoint.x, segment.endpoint.x])])
+          else if (segment.orientation == VERTICAL and segment.startpoint.x == wall2.startpoint.x)
+            overlap = _.min([_.max([segment.startpoint.y, segment.endpoint.y]), _.max([wall2.startpoint.y, wall2.endpoint.y])]) - _.max([_.min([wall2.startpoint.y, wall2.endpoint.y]), _.min([segment.startpoint.y, segment.endpoint.y])])
 
-      for wall in _.without(@most_recent_walls, null)
-        #console.log "Wall: ", wall
-        for wall2 in _.without(@most_recent_walls, wall, null, searched...)
-          #console.log "Wall2: ", wall2
-          if wall.orientation == wall2.orientation
-            if (wall.orientation == HORIZONTAL and wall.startpoint.y == wall2.startpoint.y)
-              overlap = _.min([_.max([wall.startpoint.x, wall.endpoint.x]), _.max([wall2.startpoint.x, wall2.endpoint.x])]) - _.max([_.min([wall2.startpoint.x, wall2.endpoint.x]), _.min([wall.startpoint.x, wall.endpoint.x])])
-            else if (wall.orientation == VERTICAL and wall.startpoint.x == wall2.startpoint.x)
-              overlap = _.min([_.max([wall.startpoint.y, wall.endpoint.y]), _.max([wall2.startpoint.y, wall2.endpoint.y])]) - _.max([_.min([wall2.startpoint.y, wall2.endpoint.y]), _.min([wall.startpoint.y, wall.endpoint.y])])
-
-            #console.log "Overlap: ", overlap
-            if overlap > 0
-              collisions.push([wall, wall2, overlap])
-              collisions.push([wall2, wall, overlap])
-
-        searched.push(wall)
+          #console.log "Overlap: ", overlap
+          if overlap > 0
+            collisions.push([segment, wall2, overlap])
+            collisions.push([wall2, segment, overlap])
+            console.log "Collisionsa: ", segment, wall2
 
       for wall in walls_to_search
         continue if wall.endpoint.x == segment.player.lastPos().x and wall.endpoint.y == segment.player.lastPos().y
