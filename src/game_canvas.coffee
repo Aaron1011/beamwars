@@ -20,6 +20,7 @@ define ['game', 'fabric', 'underscore'], (Game, fabric, _) ->
         @canvas.add(line)
 
     timerTick: (positions) ->
+      #console.log "Positions: ", positions
       for i, pos of positions
         line = @lines[i]
         line.points.pop()
@@ -73,7 +74,7 @@ define ['game', 'fabric', 'underscore'], (Game, fabric, _) ->
     registerCollision: (playerIndex) ->
       console.log "Collided in canvas!"
       @lines[playerIndex].stroke = 'yellow'
-      fabric.util.animate(startValue: @_lineLength(playerIndex), endValue: 0, onChange: ((value) =>
+      fabric.util.animate(startValue: @_lineLength(playerIndex), duration: 5000, endValue: 0, onChange: ((value) =>
         @_shrinkPath(playerIndex, value)
         @canvas.renderAll()),
       #onComplete: =>

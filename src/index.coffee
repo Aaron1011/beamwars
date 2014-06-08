@@ -72,6 +72,7 @@ require ['../lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'positio
 
   socket.on 'id', (id) ->
     currentPlayer = id
+    console.log "Id: ", id
 
   socket.on 'turn', (data) ->
     console.log "Turn: ", data
@@ -83,6 +84,10 @@ require ['../lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'positio
     game.timer_tick()
     $("#time").val(time)
 
+  $("#start").click(->
+    socket.emit('start')
+  )
+
 
 
   $(document).keydown (e) ->
@@ -91,13 +96,12 @@ require ['../lib/domReady!', 'game_canvas', 'game', 'synchronizedtime', 'positio
       console.log "Yup!"
       time = SynchronizedTime.getTime()
       game.handle_input(currentPlayer, e.which, time)
-      socket.emit('turn', {player: 0, direction: e.which, time: time})
-  
+      socket.emit('turn', {player: currentPlayer, direction: e.which, time: time})
 
-  setInterval((->
-    SynchronizedTime.time += 1/60
-    game.timer_tick()
-    ),
-    (1/60) * 1000
-  )
- 
+  socket.on 'start', ->
+    setInterval((->
+      SynchronizedTime.time += 1/60
+      game.timer_tick()
+      ),
+      (1/60) * 1000
+    )

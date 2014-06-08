@@ -99,7 +99,8 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
       player = @players[player_index]
       return unless player.alive
       if player.lastPos().time > time
-        throw Error('IllegalTurnException')
+        console.error("Illegal turn")
+        throw new Error('IllegalTurnException')
       switch key
         when 37
           player.positions.push(new Position([lastpos.x, lastpos.y], Point.WEST, time))
@@ -123,6 +124,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
 
     emit_collisions: (segments) ->
+      #console.log "Emitting!"
       dead = []
       if Game.use_collisions
         for segment in segments
@@ -133,6 +135,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
               if @doNotify[collision[0].player.id]
                 if collision != false
                   collision[0].player.alive = false
+                  console.log "Dead!"
                   dead.push(collision[0].player)
                   listener.notify('Collide', [collision[0].player.id, collision[1].player.id, collision[2]]) if collision != false
 
@@ -166,6 +169,11 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
         player.lastPoint = player.currentPosition()
       @emit_collisions(segments)
+      console.log "Walls state: "
+      console.log @walls.most_recent_walls
+      console.log @walls.walls
+
+      #console.log "Players: ", @players
 
       positions = {}
       positions[p.id] = p.currentPosition() for p in players

@@ -24,12 +24,20 @@ requirejs.config({
 })
 
 
+ids = []
+
+getId = ->
+  id = 0
+  while (id in ids)
+    id += 1
+  return id
+
+
 
 requirejs ['game', 'synchronizedtime'], (Game, SynchronizedTime) ->
 
   app = express()
 
-  ids = []
 
   app.use express.static(__dirname)
 
@@ -43,8 +51,10 @@ requirejs ['game', 'synchronizedtime'], (Game, SynchronizedTime) ->
   server.listen(8000)
 
   io.sockets.on 'connection', (socket) ->
-    #socket.set 'id', id, ->
-    #  socket.emit 'id', id
+    id = getId()
+    socket.emit 'id', id
+    socket.set('id', id)
+    ids.push(id)
 
     socket.on 'time', (time) ->
       console.log "Time: ", time
@@ -55,3 +65,15 @@ requirejs ['game', 'synchronizedtime'], (Game, SynchronizedTime) ->
       console.log "Turn: ", data
       game.handle_input(data.player, data.direction, data.time)
       socket.broadcast.emit('turn', data)
+    socket.on 'start', ->
+      socket.emit('start')
+      socket.broadcast.emit('start')
+      setInterval((->
+        SynchronizedTime.time += 1/60
+        game.timer_tick()
+      ),
+      (1/60) * 1000)
+
+    socket.on 'disconnect', ->
+      socket.get('id', (err, id) ->
+        ids.splice(ids.indexOf(id), 1))
