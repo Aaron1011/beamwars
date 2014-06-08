@@ -180,7 +180,7 @@ define(['position', 'player', 'synchronizedtime', 'singleplayerlistener', 'walls
 
     handleCollisionMessage: (collider, collidee, point) ->
       for listener in @collide_listeners
-        listener.notify(collider, collidee, point)
+        listener.notify('Collide', [collider, collidee, point])
 
     output: (svgOutputFile) ->
       picture = @canvas_listeners[0].output()

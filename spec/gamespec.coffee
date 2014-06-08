@@ -98,7 +98,7 @@ define(['position', 'game', 'synchronizedtime', 'point', '../lib/underscore'], (
         game.handle_input(2, KEY_WEST)
         SynchronizedTime.setTimeForTesting(timeToTraverse * .6)
         game.timer_tick()
-        expect(listener.notify).toHaveBeenCalledWith(1, 3, (Game.WIDTH * .6) - (Game.WIDTH * .4))
+        expect(listener.notify).toHaveBeenCalledWith('Collide', [1, 3, (Game.WIDTH * .6) - (Game.WIDTH * .4)])
 
       it "notifies the listeners about a one-way collision for the current player", ->
         game.registerCollisionInterest(3)
@@ -110,7 +110,7 @@ define(['position', 'game', 'synchronizedtime', 'point', '../lib/underscore'], (
         SynchronizedTime.setTimeForTesting(timeToTraverse * .65)
         game.timer_tick()
 	      # Player 3 has collided into player 1
-        expect(listener.notify).toHaveBeenCalledWith(3, 1, new fabric.Point(Game.WIDTH * .625, Game.HEIGHT/2))
+        expect(listener.notify).toHaveBeenCalledWith('Collide', [3, 1, new fabric.Point(Game.WIDTH * .625, Game.HEIGHT/2)])
 
       it "notifies the listeners about a collision coming from another player", ->
         game.registerCollisionInterest(0)
@@ -123,5 +123,17 @@ define(['position', 'game', 'synchronizedtime', 'point', '../lib/underscore'], (
         # Message from network that Player3 collided with Player1
         game.handleCollisionMessage(3, 1, new fabric.Point(500, 400))
         game.timer_tick()
-        expect(listener.notify).toHaveBeenCalledWith(3, 1, new fabric.Point(Game.WIDTH * .625,  Game.HEIGHT/2))
+        expect(listener.notify).toHaveBeenCalledWith('Collide', [3, 1, new fabric.Point(Game.WIDTH * .625,  Game.HEIGHT/2)])
+
+      it "doesn't report a player colliding with themself head-on", ->
+        game.registerCollisionInterest(0)
+        game.registerCollisionInterest(1)
+        game.registerCollisionInterest(2)
+        game.registerCollisionInterest(3)
+
+        SynchronizedTime.setTimeForTesting(timeToTraverse * .375)
+        game.timer_tick()
+        SynchronizedTime.setTimeForTesting(timeToTraverse * .4)
+        game.timer_tick()
+        expect(listener.notify).not.toHaveBeenCalled()
 )
